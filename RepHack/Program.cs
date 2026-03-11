@@ -1,4 +1,4 @@
-class Program
+﻿class Program
 {
     static void Main()
     {
@@ -10,6 +10,7 @@ class Program
             {
                 Console.Write(dungeon.map[i, j]);
             }
+            Console.Write('\n');
         }
     }
 }

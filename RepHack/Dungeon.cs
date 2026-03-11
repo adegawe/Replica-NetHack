@@ -34,8 +34,9 @@ class Dungeon
                 map[i, j] = '#';
             }
         }
-        int roomNum = random.Next(3, 7);
+        int roomNum = random.Next(8, 10);
         CreateRoom(roomNum);
+        roomList.Sort((a, b) => a.x.CompareTo(b.x));
         for(int i = 0; i < roomNum - 1; i++)
         {
             CreateCorridor(roomList[i].CenterX, roomList[i].CenterY, roomList[i+1].CenterX, roomList[i+1].CenterY);
@@ -46,10 +47,10 @@ class Dungeon
     {
         int tryNum = 0;
         while(roomCount > 0 && tryNum < 100){
-            int x = random.Next(0, 70);
-            int y = random.Next(0, 70);
-            int roomWidth = random.Next(15, 30);
-            int roomLength = random.Next(15, 30);
+            int x = random.Next(1, 80);
+            int y = random.Next(1, 80);
+            int roomWidth = random.Next(10, 15);
+            int roomLength = random.Next(8, 10);
 
             if(!IsCanBuild(x, y, roomWidth, roomLength))
             {
@@ -80,7 +81,7 @@ class Dungeon
     {
         foreach(Room room in roomList)
         {
-            if(room.x + room.width > x && room.x < x + newWidth && room.y + room.length > y &&  room.y < y + newLength)
+            if(room.x + room.width - 1 > x && room.x < x + newWidth + 1 && room.y + room.length - 1 > y &&  room.y < y + newLength + 1)
             {
                 return false;
             }
