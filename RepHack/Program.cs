@@ -2,15 +2,16 @@
 {
     static void Main()
     {
-        Dungeon dungeon = new Dungeon();
-        dungeon.InitDungeon();
-        for(int i = 0; i < dungeon.length; i++)
+        Console.CursorVisible = false;
+        Game game = new();
+        game.Start();
+        while (true)
         {
-            for(int j = 0; j < dungeon.width; j++)
-            {
-                Console.Write(dungeon.map[j, i]);
+            if(Console.KeyAvailable) {
+                game.Update();
+                game.Render();
             }
-            Console.Write('\n');
+            Thread.Sleep(16);
         }
     }
 }

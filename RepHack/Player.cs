@@ -46,6 +46,13 @@ class Player
         Y += dy;
     }
 
+    public void Spawn(int x, int y)
+    {
+        X = x;
+        Y = y;
+        Hp = MaxHp;
+    }
+
     public void TakeDamage(int amount)
     {
         Hp -= amount;

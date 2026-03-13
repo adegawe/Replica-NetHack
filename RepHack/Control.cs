@@ -1,7 +1,7 @@
 class Control
 {
     public enum Actions {MoveUp, MoveDown, MoveLeft, MoveRight, Attack, PickUp, UseItem, Idle}
-    private Actions action;
+    public Actions action;
 
     public Actions GetInput(){
         if(Console.KeyAvailable) {
@@ -26,9 +26,11 @@ class Control
         return Actions.Idle;
     }
 
-    public static bool IsCanMove(int x, int y, int width, int length)
+    public static bool IsCanMove(int x, int y, char[,] map)
     {
-        if(x > width || x < 0 || y < 0 || y > length){return false;}
+        if(x > map.GetLength(0) || x < 0 || y < 0 || y > map.GetLength(1)){return false;}
+        
+        if(map[x, y] == '#'){return false;}
         return true;
     }
 }
