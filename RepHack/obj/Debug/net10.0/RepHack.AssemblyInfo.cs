@@ -13,7 +13,7 @@ using System.Reflection;
 [assembly: System.Reflection.AssemblyCompanyAttribute("RepHack")]
 [assembly: System.Reflection.AssemblyConfigurationAttribute("Debug")]
 [assembly: System.Reflection.AssemblyFileVersionAttribute("1.0.0.0")]
-[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+9d6b86d51d3fa46d6a04c4cf1308899188e28524")]
+[assembly: System.Reflection.AssemblyInformationalVersionAttribute("1.0.0+0bef4eee0a0be3bfdc435574884c032720a1ecc7")]
 [assembly: System.Reflection.AssemblyProductAttribute("RepHack")]
 [assembly: System.Reflection.AssemblyTitleAttribute("RepHack")]
 [assembly: System.Reflection.AssemblyVersionAttribute("1.0.0.0")]

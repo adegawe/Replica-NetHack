@@ -21,21 +21,21 @@ class Game
                 break;
             }
             case Control.Actions.MoveDown:{
-                if(Control.IsCanMove(player.X, player.Y - 1, dungeon.map))
+                if(Control.IsCanMove(player.X, player.Y + 1, dungeon.map))
                 {
                     player.Move(0, 1);
                 }
                 break;
             }
             case Control.Actions.MoveLeft:{
-                if(Control.IsCanMove(player.X, player.Y - 1, dungeon.map))
+                if(Control.IsCanMove(player.X - 1, player.Y, dungeon.map))
                 {
                     player.Move(-1, 0);
                 }
                 break;
             }
             case Control.Actions.MoveRight:{
-                if(Control.IsCanMove(player.X, player.Y - 1, dungeon.map))
+                if(Control.IsCanMove(player.X + 1, player.Y, dungeon.map))
                 {
                     player.Move(1, 0);
                 }

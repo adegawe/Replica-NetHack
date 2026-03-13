@@ -5,6 +5,7 @@
         Console.CursorVisible = false;
         Game game = new();
         game.Start();
+        game.Render();
         while (true)
         {
             if(Console.KeyAvailable) {

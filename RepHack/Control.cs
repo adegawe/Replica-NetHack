@@ -28,7 +28,7 @@ class Control
 
     public static bool IsCanMove(int x, int y, char[,] map)
     {
-        if(x > map.GetLength(0) || x < 0 || y < 0 || y > map.GetLength(1)){return false;}
+        if(x >= map.GetLength(0) || x < 0 || y < 0 || y >= map.GetLength(1)){return false;}
         
         if(map[x, y] == '#'){return false;}
         return true;
