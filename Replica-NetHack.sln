@@ -1,0 +1,24 @@
+Microsoft Visual Studio Solution File, Format Version 12.00
+# Visual Studio Version 17
+VisualStudioVersion = 17.5.2.0
+MinimumVisualStudioVersion = 10.0.40219.1
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "RepHack", "RepHack\RepHack.csproj", "{9148561B-D286-DAB9-7E0A-213A802D4367}"
+EndProject
+Global
+	GlobalSection(SolutionConfigurationPlatforms) = preSolution
+		Debug|Any CPU = Debug|Any CPU
+		Release|Any CPU = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(ProjectConfigurationPlatforms) = postSolution
+		{9148561B-D286-DAB9-7E0A-213A802D4367}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{9148561B-D286-DAB9-7E0A-213A802D4367}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{9148561B-D286-DAB9-7E0A-213A802D4367}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{9148561B-D286-DAB9-7E0A-213A802D4367}.Release|Any CPU.Build.0 = Release|Any CPU
+	EndGlobalSection
+	GlobalSection(SolutionProperties) = preSolution
+		HideSolutionNode = FALSE
+	EndGlobalSection
+	GlobalSection(ExtensibilityGlobals) = postSolution
+		SolutionGuid = {348B65E5-6F1B-44EB-9728-0FE7BA471A79}
+	EndGlobalSection
+EndGlobal

@@ -8,7 +8,7 @@
         {
             for(int j = 0; j < dungeon.width; j++)
             {
-                Console.Write(dungeon.map[i, j]);
+                Console.Write(dungeon.map[j, i]);
             }
             Console.Write('\n');
         }

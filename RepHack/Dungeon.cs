@@ -19,8 +19,8 @@ class Dungeon
 
     public Dungeon()
     {
-        width = 100;
-        length = 100;
+        width = 80;
+        length = 30;
 
         map = new char[width, length];
     }
@@ -34,7 +34,7 @@ class Dungeon
                 map[i, j] = '#';
             }
         }
-        int roomNum = random.Next(8, 10);
+        int roomNum = random.Next(5, 7);
         CreateRoom(roomNum);
         roomList.Sort((a, b) => a.x.CompareTo(b.x));
         for(int i = 0; i < roomNum - 1; i++)
@@ -47,10 +47,10 @@ class Dungeon
     {
         int tryNum = 0;
         while(roomCount > 0 && tryNum < 100){
-            int x = random.Next(1, 80);
-            int y = random.Next(1, 80);
+            int x = random.Next(1, 63);
+            int y = random.Next(1, 20);
             int roomWidth = random.Next(10, 15);
-            int roomLength = random.Next(8, 10);
+            int roomLength = random.Next(5, 8);
 
             if(!IsCanBuild(x, y, roomWidth, roomLength))
             {
