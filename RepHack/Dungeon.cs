@@ -41,6 +41,7 @@ class Dungeon
         {
             CreateCorridor(roomList[i].CenterX, roomList[i].CenterY, roomList[i+1].CenterX, roomList[i+1].CenterY);
         }
+        map[roomList[roomNum - 1].CenterX, roomList[roomNum - 1].CenterY] = '>';
     }
 
     public void CreateRoom(int roomCount)

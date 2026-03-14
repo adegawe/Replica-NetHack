@@ -5,6 +5,7 @@
         Console.CursorVisible = false;
         Game game = new();
         game.Start();
+        Console.Clear();
         game.Render();
         while (true)
         {
