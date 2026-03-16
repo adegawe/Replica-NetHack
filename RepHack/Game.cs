@@ -43,11 +43,12 @@ class Game
                 break;
             }
         }
+        enemyList.RemoveAll(e => e.Hp <= 0);
         if(dungeon.map[player.X, player.Y] == '>')
         {
             Start();
         }
-        
+        EnemyTurn();
     }
 
     public void Render()
@@ -95,6 +96,64 @@ class Game
                 }
             }
             player.Move(dx, dy);
+        }
+    }
+
+    public void EnemyTurn()
+    {
+        foreach(Enemy enemy in enemyList)
+        {
+            BFS(enemy, enemy.X, enemy.Y);
+        }
+    }
+
+    public void BFS(Enemy enemy, int enemyX, int enemyY)
+    {
+        (int , int)[,] cameFrom = new (int, int)[dungeon.width, dungeon.length];
+        bool[,] visited = new bool[dungeon.width, dungeon.length];
+        Queue<(int x, int y)> queue = new();
+        (int dx, int dy)[] dirs = {(0,1), (0, -1), (1,0), (-1, 0)};
+        bool flag = true;
+        visited[enemyX, enemyY] = true;
+        (int x, int y)pos = (enemyX, enemyY);
+        while (flag)
+        {
+            foreach(var (dx, dy) in dirs)
+            {
+                if(!Control.IsCanMove(pos.x + dx, pos.y + dy, dungeon.map) || visited[pos.x + dx, pos.y + dy] == true)
+                {
+                    continue;
+                }
+                else{
+                    visited[pos.x + dx, pos.y + dy] = true;
+                    cameFrom[pos.x + dx, pos.y + dy] = (pos.x, pos.y);
+                    queue.Enqueue((pos.x + dx, pos.y + dy));
+                }
+            }
+            if(queue.Count() == 0)
+            {
+                return;
+            }
+            pos = queue.Dequeue();
+            if(pos.x == player.X && pos.y == player.Y)
+            {
+                flag = false;
+            }
+        }
+        var lastPos = pos;
+        while(pos != (enemyX, enemyY))
+        {
+            lastPos = pos;
+            pos = cameFrom[lastPos.x, lastPos.y];
+        }
+        if(lastPos.x == player.X && lastPos.y == player.Y)
+        {
+            player.TakeDamage(enemy.Attack);
+        }
+        else
+        {
+            if(!CanMove(lastPos.x, lastPos.y))
+            enemy.Move(lastPos.x - enemy.X, lastPos.y - enemy.Y);
         }
     }
 }
