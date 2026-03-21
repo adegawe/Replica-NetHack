@@ -5,6 +5,7 @@ class Enemy
     public int Hp { get; private set; }
     public int MaxHp { get; protected set; }
     public int Attack { get; protected set; }
+    public char Symbol = 'E';
     public enum EnemyType { Goblin , Slime , Dragon};
     public EnemyType enemyType;
 
@@ -47,6 +48,7 @@ class Slime : Enemy
     {
         MaxHp = 10;
         Attack = 3;
+        Symbol = 'S';
     }
 }
 
@@ -56,5 +58,6 @@ class Goblin : Enemy
     {
         MaxHp = 8;
         Attack = 4;
+        Symbol = 'G';
     }
 }

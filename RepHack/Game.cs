@@ -5,6 +5,8 @@ class Game
     Control control = new();
     List<Enemy> enemyList = [];
     Random random = new();
+    public bool gameOver = false;
+    int floor = 1;
 
     public void Start()
     {
@@ -12,14 +14,19 @@ class Game
         enemyList.Clear();
         dungeon.InitDungeon();
         player.Spawn(dungeon.roomList[0].CenterX, dungeon.roomList[0].CenterY);
-        for(int i = 0; i < 5; i++)
+        for(int i = 0; i < 2; i++)
         {
             Enemy slime = new Slime();
+            Enemy goblin = new Goblin();
             int randomRoom = random.Next(0, dungeon.roomList.Count);
             int x = random.Next(dungeon.roomList[randomRoom].x, dungeon.roomList[randomRoom].x + dungeon.roomList[randomRoom].width);
             int y = random.Next(dungeon.roomList[randomRoom].y, dungeon.roomList[randomRoom].y + dungeon.roomList[randomRoom].length);
             slime.Spawn(x, y);
+            x = random.Next(dungeon.roomList[randomRoom].x, dungeon.roomList[randomRoom].x + dungeon.roomList[randomRoom].width);
+            y = random.Next(dungeon.roomList[randomRoom].y, dungeon.roomList[randomRoom].y + dungeon.roomList[randomRoom].length);
+            goblin.Spawn(x, y);
             enemyList.Add(slime);
+            enemyList.Add(goblin);
         }
     }
     public void Update()
@@ -46,9 +53,14 @@ class Game
         enemyList.RemoveAll(e => e.Hp <= 0);
         if(dungeon.map[player.X, player.Y] == '>')
         {
+            floor++;
             Start();
         }
         EnemyTurn();
+        if(player.Hp <= 0)
+        {
+            gameOver = true;
+        }
     }
 
     public void Render()
@@ -59,11 +71,13 @@ class Game
             for(int j = 0; j < dungeon.width; j++)
             {
                 bool enemyFlag = false;
+                char symbol = ' ';
                 foreach(Enemy enemy in enemyList)
                 {
                     if(j == enemy.X && i == enemy.Y)
                     {
                         enemyFlag = true;
+                        symbol = enemy.Symbol;
                     }
                 }
                 if(j == player.X && i == player.Y)
@@ -72,7 +86,7 @@ class Game
                 }
                 else if (enemyFlag)
                 {
-                    Console.Write('S');
+                    Console.Write(symbol);
                 }
                 else
                 {
@@ -81,22 +95,33 @@ class Game
             }
             Console.Write('\n');
         }
+        DrawUI();
     }
 
     public void ProcessMove(int dx, int dy)
     {
         if(Control.IsCanMove(player.X + dx, player.Y + dy, dungeon.map))
         {
-            foreach(Enemy enemy in enemyList)
+            Enemy? tempEnemy = IsOccupied(player.X + dx, player.Y + dy);
+            if(tempEnemy != null)
             {
-                if(enemy.X == player.X + dx && enemy.Y == player.Y + dy)
-                {
-                    enemy.TakeDamage(player.Attack);
-                    return;
-                }
+                tempEnemy.TakeDamage(player.Attack);
+                return;
             }
             player.Move(dx, dy);
         }
+    }
+
+    public Enemy? IsOccupied(int dx, int dy)
+    {
+        foreach(Enemy enemy in enemyList)
+        {
+            if(enemy.X == dx && enemy.Y == dy)
+            {
+                return enemy;
+            }
+        }
+        return null;
     }
 
     public void EnemyTurn()
@@ -152,8 +177,29 @@ class Game
         }
         else
         {
-            if(!CanMove(lastPos.x, lastPos.y))
-            enemy.Move(lastPos.x - enemy.X, lastPos.y - enemy.Y);
+            if(IsOccupied(lastPos.x, lastPos.y) == null){
+                enemy.Move(lastPos.x - enemy.X, lastPos.y - enemy.Y);
+            }
         }
+    }
+
+    public void DrawUI()
+    {
+        Console.WriteLine("\n════════════════════════════════════════");
+        Console.WriteLine($"HP: {player.Hp}/{player.MaxHp}  ATK: {player.Attack}  Floor: {floor}");
+        Console.WriteLine("════════════════════════════════════════");
+    }
+
+    public void GameOver()
+    {
+        Console.Clear();
+        Console.WriteLine("\n╔════════════════════════════════════════════╗");
+        Console.WriteLine("║                                            ║");
+        Console.WriteLine("║    G A M E    O V E R                      ║");
+        Console.WriteLine("║                                            ║");
+        Console.WriteLine($"║         You died on floor {floor:D3}               ║");
+        Console.WriteLine("║         Press any key to quit              ║");
+        Console.WriteLine("║                                            ║");
+        Console.WriteLine("╚════════════════════════════════════════════╝");
     }
 }
