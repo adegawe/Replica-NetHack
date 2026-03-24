@@ -1,30 +1,3 @@
-class Item
-{
-    public string name = "";
-
-    public int weight;
-
-    public enum ItemType { Potion, Scroll, Food, Ring, Armor, Weapon, Wand, Tool };
-
-    public ItemType type;
-
-    public enum BlessState { Cursed, Normal, Blessed};
-
-    public BlessState blessState;
-}
-
-class WeaponItem : Item
-{
-    public int damage;
-    public enum WeaponType { Sword, Axe, Spear };
-    public WeaponType weaponType;
-}
-
-class PotionItem : Item
-{
-    public int healAmount;
-}
-
 class Player
 {
     public int X { get; private set; }

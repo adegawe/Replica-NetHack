@@ -22,14 +22,14 @@ class Dungeon
         width = 80;
         length = 30;
 
-        map = new char[width, length];
+        map = new char[length, width];
     }
 
     public void InitDungeon()
     {
-        for(int i = 0; i < width; i++)
+        for(int i = 0; i < length; i++)
         {
-            for(int j = 0; j < length; j++)
+            for(int j = 0; j < width; j++)
             {
                 map[i, j] = '#';
             }
@@ -41,7 +41,7 @@ class Dungeon
         {
             CreateCorridor(roomList[i].CenterX, roomList[i].CenterY, roomList[i+1].CenterX, roomList[i+1].CenterY);
         }
-        map[roomList[roomNum - 1].CenterX, roomList[roomNum - 1].CenterY] = '>';
+        map[roomList[roomNum - 1].CenterY, roomList[roomNum - 1].CenterX] = '>';
     }
 
     public void CreateRoom(int roomCount)
@@ -59,9 +59,9 @@ class Dungeon
                 continue;
             }
 
-            for(int i = x; i < x + roomWidth; i++)
+            for(int i = y; i < y + roomLength; i++)
             {
-                for(int j = y; j < y + roomLength; j++)
+                for(int j = x; j < x + roomWidth; j++)
                 {
                     map[i, j] = '.';
                 }
@@ -96,7 +96,7 @@ class Dungeon
         int end = Math.Max(Ax, Bx);
         for(int i = start; i <= end; i++)
         {
-            map[i, Ay] = '.';
+            map[Ay, i] = '.';
         }
 
         start = Math.Min(Ay, By);
@@ -104,7 +104,7 @@ class Dungeon
 
         for(int j = start; j <= end; j++)
         {
-            map[Bx, j] = '.';
+            map[j, Bx] = '.';
         }
     }
 }
