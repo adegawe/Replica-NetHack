@@ -58,32 +58,9 @@ class Game
     }
     public void Update()
     {
-        control.GetInput();
-        switch(control.action){
-            case Control.Actions.MoveUp:{
-                ProcessMove(0, -1);
-                break;
-            }
-            case Control.Actions.MoveDown:{
-                ProcessMove(0, 1);
-                break;
-            }
-            case Control.Actions.MoveLeft:{
-                ProcessMove(-1, 0);
-                break;
-            }
-            case Control.Actions.MoveRight:{
-                ProcessMove(1, 0);
-                break;
-            }
-            case Control.Actions.PickUp:{
-                ProcessPickUp(player.X, player.Y);
-                break;
-            }
-            case Control.Actions.OpenInventory:{
-                renderer.DrawInventory();
-                return;
-            }
+        if(keyMap.TryGetValue(control.GetInput(), out Action? act))
+        {
+            act.Invoke();
         }
         enemyList.RemoveAll(e => e.Hp <= 0);
         itemList.RemoveAll(i => i.PickedUp == true);
