@@ -2,9 +2,10 @@ class Item
 {    
     public int X { get; private set; }
     public int Y { get; private set; }
-    public string name = "";
+    public string displayName = "";
     public int weight;
     public char Symbol = '?';
+    public bool PickedUp = false;
 
     public enum ItemType { Potion, Scroll, Food, Ring, Armor, Weapon, Wand, Tool };
 
@@ -19,6 +20,8 @@ class Item
         X = x;
         Y = y;
     }
+
+    public virtual void Use(Player player) { }
 }
 
 class WeaponItem : Item
@@ -30,13 +33,17 @@ class WeaponItem : Item
     {
         Symbol = ')';
     }
+    
+    public override void Use(Player player) {  }
 }
 
 class PotionItem : Item
 {
+    public int healAmount = 5;
     public PotionItem()
     {
         Symbol = '!';
+        displayName = "Potion";
     }
-    public int healAmount = 5;
+    public override void Use(Player player) { player.Heal(healAmount); }
 }

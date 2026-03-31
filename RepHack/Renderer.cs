@@ -4,7 +4,6 @@ class Renderer
     Player player;
     List<Enemy> enemyList;
     List<Item> itemList;
-    int floor;
     
     public Renderer(Dungeon d, Player p, List<Enemy> e, List<Item> i, int f)
     {
@@ -12,7 +11,6 @@ class Renderer
         player = p;
         enemyList = e;
         itemList = i;
-        floor = f;
     }
 
     public char[,] DrawCall()
@@ -36,14 +34,27 @@ class Renderer
         buffer[player.Y, player.X] = '@';
         return buffer;
     }
-    public void DrawUI()
+    public void DrawUI(int floor)
     {
         Console.WriteLine("\n════════════════════════════════════════");
         Console.WriteLine($"HP: {player.Hp}/{player.MaxHp}  ATK: {player.Attack}  Floor: {floor}");
         Console.WriteLine("════════════════════════════════════════");
     }
 
-    public void GameOver()
+    public void DrawInventory()
+    {
+        Console.WriteLine("\n════════════════════════════════════════");
+        Console.Write("|");
+        foreach(Item item in itemList)
+        {
+            Console.Write($"{item.displayName}");
+            Console.Write("|");
+        }
+        Console.Write("\n");
+        Console.WriteLine("════════════════════════════════════════");
+    }
+
+    public void GameOver(int floor)
     {
         Console.Clear();
         Console.WriteLine("\n╔════════════════════════════════════════════╗");

@@ -6,6 +6,7 @@ class Game
     List<Enemy> enemyList = [];
     List<Item> itemList = [];
     Random random = new();
+    Dictionary<Control.Actions, Action> keyMap;
     Renderer renderer;
     public bool gameOver = false;
     int floor = 1;
@@ -13,6 +14,15 @@ class Game
     public Game()
     {
         renderer = new(dungeon, player, enemyList, itemList, floor);
+        keyMap = new()
+        {
+            {Control.Actions.MoveUp, () => ProcessMove(0, -1)},
+            {Control.Actions.MoveDown, () => ProcessMove(0, 1)},
+            {Control.Actions.MoveLeft, () => ProcessMove(-1, 0)},
+            {Control.Actions.MoveRight, () => ProcessMove(1, 0)},
+            {Control.Actions.PickUp, () => ProcessPickUp(player.X, player.Y)},
+            {Control.Actions.OpenInventory, () => renderer.DrawInventory()}
+        };
     }
 
     public void Start()
@@ -66,8 +76,17 @@ class Game
                 ProcessMove(1, 0);
                 break;
             }
+            case Control.Actions.PickUp:{
+                ProcessPickUp(player.X, player.Y);
+                break;
+            }
+            case Control.Actions.OpenInventory:{
+                renderer.DrawInventory();
+                return;
+            }
         }
         enemyList.RemoveAll(e => e.Hp <= 0);
+        itemList.RemoveAll(i => i.PickedUp == true);
         if(dungeon.map[player.Y, player.X] == '>')
         {
             floor++;
@@ -91,6 +110,17 @@ class Game
                 return;
             }
             player.Move(dx, dy);
+        }
+    }
+
+    public void ProcessPickUp(int x, int y)
+    {
+        foreach (Item item in itemList){
+            if(item.X == x && item.Y == y)
+            {
+                player.PickUp(item);
+                item.PickedUp = true;
+            }
         }
     }
 
@@ -118,12 +148,12 @@ class Game
             }
             Console.Write('\n');
         }
-        renderer.DrawUI();
+        renderer.DrawUI(floor);
     }
 
     public void GameOver()
     {
-        renderer.GameOver();
+        renderer.GameOver(floor);
     }
 
     public void EnemyTurn()

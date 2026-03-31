@@ -5,7 +5,8 @@ class Player
     public int Hp { get; private set; }
     public int MaxHp { get; private set; }
     public int Attack { get; private set; }
-    private readonly Item[] inventory = new Item[50];
+    private readonly List<Item> inventory = [];
+    int inventoryMax = 50;
     public Player()
     {
         Hp = 15;
@@ -18,6 +19,16 @@ class Player
         X += dx;
         Y += dy;
     }
+
+    public void PickUp(Item item)
+    {
+        if(inventory.Count <= inventoryMax)
+        {
+            inventory.Add(item);
+        }
+    }
+
+    public void Use(Item item, char alphabet){}
 
     public void Spawn(int x, int y)
     {
@@ -32,7 +43,6 @@ class Player
         if(Hp <= 0)
         {
             Hp = 0;
-            //GameOver
         }
     }
 
