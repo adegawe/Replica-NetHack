@@ -5,12 +5,12 @@ class Player
     public int Hp { get; private set; }
     public int MaxHp { get; private set; }
     public int Attack { get; private set; }
-    private readonly List<Item> inventory = [];
-    int inventoryMax = 50;
+    public readonly List<Item> inventory = [];
+    public int inventoryMax = 50;
     public Player()
     {
         Hp = 15;
-        Attack = 5;
+        Attack = 15;
         MaxHp = 20;
     }
 
@@ -28,7 +28,17 @@ class Player
         }
     }
 
-    public void Use(Item item, char alphabet){}
+    public void Use(int index)
+    {
+        inventory[index].Use(this);
+        if(inventory[index].Consumable == true)
+        {
+            if(inventory[index].Uses <= 0)
+            {
+                inventory.Remove(inventory[index]);
+            }
+        }
+    }
 
     public void Spawn(int x, int y)
     {
@@ -53,5 +63,15 @@ class Player
         {
             Hp = MaxHp;
         }
+    }
+
+    internal void Use(bool v)
+    {
+        throw new NotImplementedException();
+    }
+
+    internal void Use(bool v, out int result)
+    {
+        throw new NotImplementedException();
     }
 }

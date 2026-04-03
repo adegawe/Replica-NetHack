@@ -21,7 +21,7 @@ class Game
             {Control.Actions.MoveLeft, () => ProcessMove(-1, 0)},
             {Control.Actions.MoveRight, () => ProcessMove(1, 0)},
             {Control.Actions.PickUp, () => ProcessPickUp(player.X, player.Y)},
-            {Control.Actions.OpenInventory, () => renderer.DrawInventory()}
+            {Control.Actions.OpenInventory, () => ProcessInventory()}
         };
     }
 
@@ -31,17 +31,17 @@ class Game
         enemyList.Clear();
         itemList.Clear();
         dungeon.InitDungeon();
-        player.Spawn(dungeon.roomList[0].CenterX, dungeon.roomList[0].CenterY);
+        player.Spawn(dungeon.roomList[0].RoomCenterX, dungeon.roomList[0].RoomCenterY);
         for(int i = 0; i < 2; i++)
         {
             Enemy slime = new Slime();
             Enemy goblin = new Goblin();
             int randomRoom = random.Next(0, dungeon.roomList.Count);
-            int x = random.Next(dungeon.roomList[randomRoom].x, dungeon.roomList[randomRoom].x + dungeon.roomList[randomRoom].width);
-            int y = random.Next(dungeon.roomList[randomRoom].y, dungeon.roomList[randomRoom].y + dungeon.roomList[randomRoom].length);
+            int x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
+            int y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
             slime.Spawn(x, y);
-            x = random.Next(dungeon.roomList[randomRoom].x, dungeon.roomList[randomRoom].x + dungeon.roomList[randomRoom].width);
-            y = random.Next(dungeon.roomList[randomRoom].y, dungeon.roomList[randomRoom].y + dungeon.roomList[randomRoom].length);
+            x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
+            y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
             goblin.Spawn(x, y);
             enemyList.Add(slime);
             enemyList.Add(goblin);
@@ -50,8 +50,8 @@ class Game
         {
             Item potion = new PotionItem();
             int randomRoom = random.Next(0, dungeon.roomList.Count);
-            int x = random.Next(dungeon.roomList[randomRoom].x, dungeon.roomList[randomRoom].x + dungeon.roomList[randomRoom].width);
-            int y = random.Next(dungeon.roomList[randomRoom].y, dungeon.roomList[randomRoom].y + dungeon.roomList[randomRoom].length);
+            int x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
+            int y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
             potion.Spawn(x, y);
             itemList.Add(potion);
         }
@@ -98,6 +98,22 @@ class Game
                 player.PickUp(item);
                 item.PickedUp = true;
             }
+        }
+    }
+
+    public void ProcessInventory()
+    {
+        renderer.DrawInventory();
+        while(true)
+        {
+            var key = Console.ReadKey().Key;
+            if (key >= ConsoleKey.A && key <= ConsoleKey.Z && key - ConsoleKey.A < player.inventory.Count)
+            {
+                player.Use(key - ConsoleKey.A);
+            }
+            if(key == ConsoleKey.Escape) { break; }
+            renderer.DrawInventory();
+            Thread.Sleep(16);
         }
     }
 

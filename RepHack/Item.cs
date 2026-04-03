@@ -6,6 +6,8 @@ class Item
     public int weight;
     public char Symbol = '?';
     public bool PickedUp = false;
+    public bool Consumable = false;
+    public int Uses = 0;
 
     public enum ItemType { Potion, Scroll, Food, Ring, Armor, Weapon, Wand, Tool };
 
@@ -44,6 +46,8 @@ class PotionItem : Item
     {
         Symbol = '!';
         displayName = "Potion";
+        Uses = 2;
+        Consumable = true;
     }
-    public override void Use(Player player) { player.Heal(healAmount); }
+    public override void Use(Player player) { player.Heal(healAmount); Uses -= 1; }
 }

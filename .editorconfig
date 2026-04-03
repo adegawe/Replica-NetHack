@@ -1,0 +1,4 @@
+[*.cs]
+
+# CS0665: 조건식에 할당을 사용하면 항상 상수가 됩니다.
+dotnet_diagnostic.CS0665.severity = suggestion

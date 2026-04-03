@@ -7,16 +7,38 @@ struct Room
     public int CenterY => y + length / 2;
 }
 
+class Node
+{
+    public int x, y;
+    public int width, length;
+    public Node? leftChild;
+    public Node? rightChild;
+    public Room? room;
+
+    public Node(int x, int y, int width, int length)
+    {
+        this.x = x;
+        this.y = y;
+        this.width = width;
+        this.length = length;
+    }
+    public int RoomX => room!.Value.x;
+    public int RoomY => room!.Value.y;
+    public int RoomWidth => room!.Value.width;
+    public int RoomLength => room!.Value.length;
+
+    public int RoomCenterX => room!.Value.CenterX;
+    public int RoomCenterY => room!.Value.CenterY;
+}
+
 class Dungeon
 {
     public char[,] map;
-
-    public List<Room> roomList = new List<Room>();
-
+    public List<Node> roomList = new List<Node>();
     public int width, length;
-
+    private int minWidth = 12;
+    private int minLength = 8;
     readonly Random random = new();
-
     public Dungeon()
     {
         width = 80;
@@ -34,60 +56,42 @@ class Dungeon
                 map[i, j] = '#';
             }
         }
-        int roomNum = random.Next(5, 7);
-        CreateRoom(roomNum);
-        roomList.Sort((a, b) => a.x.CompareTo(b.x));
+        Node node = new(x : 0, y : 0, width : this.width, length : this.length);
+        BSP(node);
+        int roomNum = Math.Min(random.Next(5, 7), roomList.Count());
+        int count = 0;
+        foreach(Node tempNode in roomList)
+        {
+            if(count > roomNum){
+                break;
+            }
+            CreateRoom(tempNode);
+            count++;
+        }
         for(int i = 0; i < roomNum - 1; i++)
         {
-            CreateCorridor(roomList[i].CenterX, roomList[i].CenterY, roomList[i+1].CenterX, roomList[i+1].CenterY);
+            if(roomList[i].room != null){
+                CreateCorridor(roomList[i].RoomCenterX, roomList[i].RoomCenterY, roomList[i+1].RoomCenterX, roomList[i+1].RoomCenterY);
+            }
         }
-        map[roomList[roomNum - 1].CenterY, roomList[roomNum - 1].CenterX] = '>';
+        map[roomList[roomNum - 1].RoomCenterY, roomList[roomNum - 1].RoomCenterX] = '>';
     }
 
-    public void CreateRoom(int roomCount)
+    public void CreateRoom(Node node)
     {
-        int tryNum = 0;
-        while(roomCount > 0 && tryNum < 100){
-            int x = random.Next(1, 63);
-            int y = random.Next(1, 20);
-            int roomWidth = random.Next(10, 15);
-            int roomLength = random.Next(5, 8);
+        int roomWidth = random.Next(minWidth/3, node.width-4);
+        int roomLength = random.Next(minLength/2, node.length-2);
+        int x = node.x + random.Next(1, node.width - roomWidth);
+        int y = node.y + random.Next(1, node.length - roomLength);
+        node.room = new Room { x = x, y = y, width = roomWidth, length = roomLength};
 
-            if(!IsCanBuild(x, y, roomWidth, roomLength))
-            {
-                tryNum++;
-                continue;
-            }
-
-            for(int i = y; i < y + roomLength; i++)
-            {
-                for(int j = x; j < x + roomWidth; j++)
-                {
-                    map[i, j] = '.';
-                }
-            }
-            Room room = new Room
-            {
-                x = x,
-                y = y,
-                width = roomWidth,
-                length = roomLength
-            };
-            roomList.Add(room);
-            roomCount--;
-            }
-    }
-    
-    public bool IsCanBuild(int x, int y, int newWidth, int newLength)
-    {
-        foreach(Room room in roomList)
+        for(int i = y; i < y + roomLength; i++)
         {
-            if(room.x + room.width - 1 > x && room.x < x + newWidth + 1 && room.y + room.length - 1 > y &&  room.y < y + newLength + 1)
+            for(int j = x; j < x + roomWidth; j++)
             {
-                return false;
+                map[i, j] = '.';
             }
         }
-        return true;
     }
 
     public void CreateCorridor(int Ax, int Ay, int Bx, int By)
@@ -105,6 +109,46 @@ class Dungeon
         for(int j = start; j <= end; j++)
         {
             map[j, Bx] = '.';
+        }
+    }
+
+    public void BSP(Node parent)
+    {
+        if(parent.width < minWidth * 2|| parent.length < minLength * 2)
+        {
+            roomList.Add(parent);
+            return;
+        }
+
+        int randomWidth = random.Next(minWidth , parent.width-minWidth);
+        int randomLength = random.Next(minLength , parent.length-minLength);
+        bool splitWidth;
+        
+        if((float)parent.width/parent.length > 1.5)
+        {
+            splitWidth = true;
+        }
+        else if((float)parent.length/parent.width > 1.5)
+        {
+            splitWidth = false;
+        }
+        else
+        {
+            splitWidth = random.Next(0, 2) == 0;
+        }
+        if (splitWidth)
+        {
+            parent.leftChild = new Node(parent.x, parent.y, randomWidth, parent.length);
+            parent.rightChild = new Node(parent.x + randomWidth, parent.y, parent.width - randomWidth, parent.length);
+            BSP(parent.leftChild);
+            BSP(parent.rightChild);
+        }
+        else
+        {
+            parent.leftChild = new Node(parent.x, parent.y, parent.width, randomLength);
+            parent.rightChild = new Node(parent.x, parent.y + randomLength, parent.width, parent.length - randomLength);
+            BSP(parent.leftChild);
+            BSP(parent.rightChild);
         }
     }
 }
