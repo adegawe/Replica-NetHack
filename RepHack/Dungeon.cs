@@ -5,6 +5,7 @@ struct Room
 
     public int CenterX => x + width / 2;
     public int CenterY => y + length / 2;
+    public bool isActive;
 }
 
 class Node
@@ -29,15 +30,18 @@ class Node
 
     public int RoomCenterX => room!.Value.CenterX;
     public int RoomCenterY => room!.Value.CenterY;
+    
+    public bool isActive = false;
 }
 
 class Dungeon
 {
+    public int roomNum;
     public char[,] map;
     public List<Node> roomList = new List<Node>();
     public int width, length;
     private int minWidth = 12;
-    private int minLength = 8;
+    private int minLength = 7;
     readonly Random random = new();
     public Dungeon()
     {
@@ -58,40 +62,41 @@ class Dungeon
         }
         Node node = new(x : 0, y : 0, width : this.width, length : this.length);
         BSP(node);
-        int roomNum = Math.Min(random.Next(5, 7), roomList.Count());
+        roomNum = Math.Min(random.Next(5, 7), roomList.Count);
         int count = 0;
         foreach(Node tempNode in roomList)
         {
-            if(count > roomNum){
-                break;
-            }
             CreateRoom(tempNode);
             count++;
         }
-        for(int i = 0; i < roomNum - 1; i++)
+        var selectedNodes = roomList.OrderBy(x => random.Next()).Take(roomNum).ToList();
+        foreach (Node nod in selectedNodes)
         {
-            if(roomList[i].room != null){
-                CreateCorridor(roomList[i].RoomCenterX, roomList[i].RoomCenterY, roomList[i+1].RoomCenterX, roomList[i+1].RoomCenterY);
+            nod.isActive = true;
+            for(int i = nod.RoomX; i < nod.RoomX + nod.RoomWidth; i++)
+            {
+                for(int j = nod.RoomY; j < nod.RoomY + nod.RoomLength; j++)
+                {
+                    map[j, i] = '.';
+                }
             }
         }
-        map[roomList[roomNum - 1].RoomCenterY, roomList[roomNum - 1].RoomCenterX] = '>';
+        ConnectRoom(node);
+        var lastNode = selectedNodes[^1];
+        map[lastNode.RoomCenterY, lastNode.RoomCenterX] = '>';
     }
 
     public void CreateRoom(Node node)
     {
-        int roomWidth = random.Next(minWidth/3, node.width-4);
-        int roomLength = random.Next(minLength/2, node.length-2);
+        int roomWidth, roomLength;
+        do {
+            roomWidth = random.Next(minWidth/2, node.width-4);
+            roomLength = random.Next(minLength/2, node.length-2);
+        } while(roomWidth * 3 < roomLength);
+
         int x = node.x + random.Next(1, node.width - roomWidth);
         int y = node.y + random.Next(1, node.length - roomLength);
         node.room = new Room { x = x, y = y, width = roomWidth, length = roomLength};
-
-        for(int i = y; i < y + roomLength; i++)
-        {
-            for(int j = x; j < x + roomWidth; j++)
-            {
-                map[i, j] = '.';
-            }
-        }
     }
 
     public void CreateCorridor(int Ax, int Ay, int Bx, int By)
@@ -150,5 +155,27 @@ class Dungeon
             BSP(parent.leftChild);
             BSP(parent.rightChild);
         }
+    }
+
+    public Room? ConnectRoom(Node node)
+    {
+        Room? room = node.room;
+        if(node.isActive)
+        {
+            return node.room;
+        }
+        if(node.leftChild == null && node.rightChild == null)
+        {
+            return null;
+        }
+        
+        Room? leftRoom = ConnectRoom(node.leftChild!);
+        Room? rightRoom = ConnectRoom(node.rightChild!);
+        if(leftRoom.HasValue && rightRoom.HasValue)
+        {
+            CreateCorridor(leftRoom.Value.CenterX, leftRoom.Value.CenterY, rightRoom.Value.CenterX, rightRoom.Value.CenterY);
+        }
+
+        return leftRoom ?? rightRoom;
     }
 }

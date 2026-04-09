@@ -32,16 +32,17 @@ class Game
         itemList.Clear();
         dungeon.InitDungeon();
         player.Spawn(dungeon.roomList[0].RoomCenterX, dungeon.roomList[0].RoomCenterY);
+        var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
         for(int i = 0; i < 2; i++)
         {
             Enemy slime = new Slime();
             Enemy goblin = new Goblin();
-            int randomRoom = random.Next(0, dungeon.roomList.Count);
-            int x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
-            int y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
+            int randomRoom = random.Next(0, activeRooms.Count);
+            int x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
+            int y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
             slime.Spawn(x, y);
-            x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
-            y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
+            x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
+            y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
             goblin.Spawn(x, y);
             enemyList.Add(slime);
             enemyList.Add(goblin);
