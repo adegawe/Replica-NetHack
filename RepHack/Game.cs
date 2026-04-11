@@ -52,7 +52,7 @@ class Game
         for(int i = 0; i < 2; i++)
         {
             Item potion = new PotionItem();
-            int randomRoom = random.Next(0, dungeon.roomList.Count);
+            int randomRoom = random.Next(0, activeRooms.Count);
             int x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
             int y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
             potion.Spawn(x, y);
