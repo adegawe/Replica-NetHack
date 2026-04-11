@@ -3,6 +3,7 @@ class Game
     Player player = new();
     Dungeon dungeon = new();
     Control control = new();
+    Pathfinding pathfinding;
     List<Enemy> enemyList = [];
     List<Item> itemList = [];
     Random random = new();
@@ -13,7 +14,8 @@ class Game
 
     public Game()
     {
-        renderer = new(dungeon, player, enemyList, itemList, floor);
+        renderer = new(dungeon, player, enemyList, itemList);
+        pathfinding = new(dungeon.width, dungeon.length);
         keyMap = new()
         {
             {Control.Actions.MoveUp, () => ProcessMove(0, -1)},
@@ -51,8 +53,8 @@ class Game
         {
             Item potion = new PotionItem();
             int randomRoom = random.Next(0, dungeon.roomList.Count);
-            int x = random.Next(dungeon.roomList[randomRoom].RoomX, dungeon.roomList[randomRoom].RoomX + dungeon.roomList[randomRoom].RoomWidth);
-            int y = random.Next(dungeon.roomList[randomRoom].RoomY, dungeon.roomList[randomRoom].RoomY + dungeon.roomList[randomRoom].RoomLength);
+            int x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
+            int y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
             potion.Spawn(x, y);
             itemList.Add(potion);
         }
@@ -154,60 +156,20 @@ class Game
     {
         foreach(Enemy enemy in enemyList)
         {
-            BFS(enemy, enemy.X, enemy.Y);
-        }
-    }
-
-    public void BFS(Enemy enemy, int enemyX, int enemyY)
-    {
-        (int, int)[,] cameFrom = new (int, int)[dungeon.length, dungeon.width];
-        bool[,] visited = new bool[dungeon.length, dungeon.width];
-        Queue<(int x, int y)> queue = new();
-        (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
-        bool flag = true;
-        visited[enemyY, enemyX] = true;
-        (int x, int y) pos = (enemyX, enemyY);
-        while (flag)
-        {
-            foreach(var (dx, dy) in dirs)
+            (int x, int y)? pos = pathfinding.BFS(enemy, player.X, player.Y, dungeon.map, (x, y) => IsOccupied(x, y));
+            if(pos is (int x, int y))
             {
-                if(!Control.IsCanMove(pos.x + dx, pos.y + dy, dungeon.map) || visited[pos.y + dy, pos.x + dx])
+                if(x == player.X && y == player.Y)
                 {
-                    continue;
+                    player.TakeDamage(enemy.Attack);
                 }
                 else
                 {
-                    visited[pos.y + dy, pos.x + dx] = true;
-                    cameFrom[pos.y + dy, pos.x + dx] = (pos.x, pos.y);
-                    queue.Enqueue((pos.x + dx, pos.y + dy));
+                    enemy.Move(x - enemy.X, y - enemy.Y);
                 }
             }
-            if(queue.Count() == 0)
-            {
-                return;
-            }
-            pos = queue.Dequeue();
-            if(pos.x == player.X && pos.y == player.Y)
-            {
-                flag = false;
-            }
         }
-        var lastPos = pos;
-        while(pos != (enemyX, enemyY))
-        {
-            lastPos = pos;
-            pos = cameFrom[lastPos.y, lastPos.x];
-        }
-        if(lastPos.x == player.X && lastPos.y == player.Y)
-        {
-            player.TakeDamage(enemy.Attack);
-        }
-        else
-        {
-            if(IsOccupied(lastPos.x, lastPos.y) == null)
-            {
-                enemy.Move(lastPos.x - enemy.X, lastPos.y - enemy.Y);
-            }
-        }
+        return;
     }
+
 }

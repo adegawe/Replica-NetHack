@@ -5,7 +5,7 @@ class Renderer
     List<Enemy> enemyList;
     List<Item> itemList;
     
-    public Renderer(Dungeon d, Player p, List<Enemy> e, List<Item> i, int f)
+    public Renderer(Dungeon d, Player p, List<Enemy> e, List<Item> i)
     {
         dungeon = d;
         player = p;

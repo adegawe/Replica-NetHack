@@ -64,14 +64,4 @@ class Player
             Hp = MaxHp;
         }
     }
-
-    internal void Use(bool v)
-    {
-        throw new NotImplementedException();
-    }
-
-    internal void Use(bool v, out int result)
-    {
-        throw new NotImplementedException();
-    }
 }
