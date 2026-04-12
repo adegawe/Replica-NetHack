@@ -1,3 +1,4 @@
+namespace RepHack;
 class Pathfinding
 {
     (int, int)[,] cameFrom;

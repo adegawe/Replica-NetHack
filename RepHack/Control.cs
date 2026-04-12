@@ -1,3 +1,5 @@
+namespace RepHack;
+
 class Control
 {
     public enum Actions {MoveUp, MoveDown, MoveLeft, MoveRight, Attack, PickUp, 

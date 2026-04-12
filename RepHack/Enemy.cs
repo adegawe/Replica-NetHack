@@ -1,3 +1,4 @@
+namespace RepHack;
 class Enemy : Entity
 {
     public char Symbol = 'E';

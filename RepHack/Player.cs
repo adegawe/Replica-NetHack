@@ -1,3 +1,4 @@
+namespace RepHack;
 class Player : Entity
 {
     public readonly List<Item> inventory = [];

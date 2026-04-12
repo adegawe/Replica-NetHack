@@ -1,3 +1,4 @@
+namespace RepHack;
 struct Room
 {
     public int x, y;
@@ -42,11 +43,15 @@ class Dungeon
     public int width, length;
     private int minWidth = 12;
     private int minLength = 7;
+    const int dungeonWidth = 80;
+    const int dungeonLength = 30;
+    const int minRoomNumber = 5;
+    const int maxRoomNumber = 7;
     readonly Random random = new();
     public Dungeon()
     {
-        width = 80;
-        length = 30;
+        width = dungeonWidth;
+        length = dungeonLength;
 
         map = new char[length, width];
     }
@@ -62,7 +67,7 @@ class Dungeon
         }
         Node node = new(x : 0, y : 0, width : this.width, length : this.length);
         BSP(node);
-        roomNum = Math.Min(random.Next(5, 7), roomList.Count);
+        roomNum = Math.Min(random.Next(minRoomNumber, maxRoomNumber), roomList.Count);
         int count = 0;
         foreach(Node tempNode in roomList)
         {

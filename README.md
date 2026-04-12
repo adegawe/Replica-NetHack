@@ -75,6 +75,9 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 - **장비 시스템** — 무기/방어구 장착, 스탯 반영
 - **스크롤/포션 효과 다양화** — 미확인 아이템 식별 시스템 (NetHack의 핵심 시스템)
 
+## 자잘한 고칠 사항들
+- minRoomNumber
+
 ## 조작
 
 | 키 | 동작 |

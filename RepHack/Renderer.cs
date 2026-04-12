@@ -1,9 +1,12 @@
+namespace RepHack;
 class Renderer
 {
     Dungeon dungeon;
     Player player;
     List<Enemy> enemyList;
     List<Item> itemList;
+    public Dictionary<char, ConsoleColor> colorMap {get; private set;}
+
     
     public Renderer(Dungeon d, Player p, List<Enemy> e, List<Item> i)
     {
@@ -11,6 +14,16 @@ class Renderer
         player = p;
         enemyList = e;
         itemList = i;
+        colorMap = new()
+        {
+            {'@', ConsoleColor.Green},
+            {'S', ConsoleColor.Cyan},
+            {'G', ConsoleColor.DarkGreen},
+            {'!', ConsoleColor.Yellow},
+            {'>', ConsoleColor.White},
+            {'#', ConsoleColor.Gray},
+            {'.', ConsoleColor.Black}
+        };
     }
 
     public char[,] DrawCall()

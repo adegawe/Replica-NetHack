@@ -1,3 +1,4 @@
+namespace RepHack;
 class Game
 {
     Player player = new();
@@ -79,7 +80,7 @@ class Game
         }
     }
 
-    public void ProcessMove(int dx, int dy)
+    private void ProcessMove(int dx, int dy)
     {
         if(Control.IsCanMove(player.X + dx, player.Y + dy, dungeon.map))
         {
@@ -93,7 +94,7 @@ class Game
         }
     }
 
-    public void ProcessPickUp(int x, int y)
+    private void ProcessPickUp(int x, int y)
     {
         foreach (Item item in itemList){
             if(item.X == x && item.Y == y)
@@ -104,7 +105,7 @@ class Game
         }
     }
 
-    public void ProcessInventory()
+    private void ProcessInventory()
     {
         renderer.DrawInventory();
         while(true)
@@ -120,7 +121,7 @@ class Game
         }
     }
 
-    public Enemy? IsOccupied(int dx, int dy)
+    private Enemy? IsOccupied(int dx, int dy)
     {
         foreach(Enemy enemy in enemyList)
         {
@@ -140,6 +141,13 @@ class Game
         {
             for(int j = 0; j < dungeon.width; j++)
             {
+                char text = buffer[i, j];
+                if(renderer.colorMap.TryGetValue(text, out var color)) {}
+                else
+                {
+                    color = ConsoleColor.Black;
+                }
+                Console.ForegroundColor = color;
                 Console.Write(buffer[i, j]);
             }
             Console.Write('\n');
@@ -152,7 +160,7 @@ class Game
         renderer.GameOver(floor);
     }
 
-    public void EnemyTurn()
+    private void EnemyTurn()
     {
         foreach(Enemy enemy in enemyList)
         {

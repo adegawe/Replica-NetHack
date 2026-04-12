@@ -1,3 +1,4 @@
+namespace RepHack;
 class Item
 {    
     public int X { get; private set; }

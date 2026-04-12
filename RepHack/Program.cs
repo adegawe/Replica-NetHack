@@ -1,7 +1,9 @@
-﻿class Program
+﻿namespace RepHack;
+class Program
 {
     static void Main()
     {
+        const int FRAME_DELEAY = 16;
         Console.CursorVisible = false;
         Game game = new();
         game.Start();
@@ -18,7 +20,7 @@
                 return;
             }
             game.Render();
-            Thread.Sleep(16);
+            Thread.Sleep(FRAME_DELEAY);
         }
     }
 }

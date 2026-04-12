@@ -1,3 +1,4 @@
+namespace RepHack;
 class Entity
 {
     public int X { get; private set; }
