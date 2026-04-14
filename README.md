@@ -86,7 +86,7 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 | `↑↓←→` | 이동 / 인접한 적 공격 |
 | `,` | 아이템 줍기 |
 | `I` | 인벤토리 열기 |
-| `Q` | 포션 사용 |
+| `123456789` | 포션 사용 |
 
 ## 빌드
 
