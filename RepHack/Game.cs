@@ -36,6 +36,7 @@ class Game
         dungeon.roomList.Clear();
         enemyList.Clear();
         itemList.Clear();
+        fov.ResetExplored();
         dungeon.InitDungeon();
         player.Spawn(dungeon.roomList[0].RoomCenterX, dungeon.roomList[0].RoomCenterY);
         var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
@@ -146,7 +147,7 @@ class Game
             for(int j = 0; j < dungeon.width; j++)
             {
                 char text = buffer[i, j];
-                if(renderer.colorMap.TryGetValue(text, out var color)) {}
+                if(fov.isVisible[i, j] && renderer.colorMap.TryGetValue(text, out var color)) {}
                 else
                 {
                     color = ConsoleColor.Black;

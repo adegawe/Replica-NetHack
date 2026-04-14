@@ -38,7 +38,7 @@ class Renderer
         {
             for(int j = 0; j < dungeon.width; j++)
             {
-                if (fov.isVisible[i, j]) 
+                if (fov.isVisible[i, j] || fov.isExplored[i, j]) 
                 {
                     buffer[i, j] = dungeon.map[i, j];
                 }

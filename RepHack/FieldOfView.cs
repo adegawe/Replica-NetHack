@@ -13,12 +13,15 @@ class FOV
     };
     int xx, xy, yx, yy;
     public bool[,] isVisible {get; private set;}
+    public bool[,] isExplored {get; private set;}
+
     private char[,] map;
     private int playerX, playerY, fovLength;
 
     public FOV(int width, int length, char[,] dungeonMap)
     {
         isVisible = new bool[length, width];
+        isExplored = new bool[length, width];
         map = dungeonMap;
     }
 
@@ -44,6 +47,7 @@ class FOV
                    x < isVisible.GetLength(1) && y < isVisible.GetLength(0))
                 {
                     isVisible[y, x] = true;
+                    isExplored[y, x] = true;
                     isWall = map[y, x] == '#';
                     if(!wasWall && isWall)
                     {
@@ -75,5 +79,10 @@ class FOV
             yx = octants[i, 2]; yy = octants[i, 3];
             CastLight(1, 0.0f, 1.0f);
         }
+    }
+
+    public void ResetExplored()
+    {
+        Array.Clear(isExplored, 0, isExplored.Length);
     }
 }
