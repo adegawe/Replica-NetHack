@@ -5,9 +5,9 @@ class Player : Entity
     public int inventoryMax = 50;
     public Player()
     {
-        Hp = 15;
         Attack = 15;
         MaxHp = 20;
+        Symbol = '@';
     }
 
     public void PickUp(Item item)

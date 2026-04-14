@@ -3,48 +3,66 @@ class Renderer
 {
     Dungeon dungeon;
     Player player;
+    FOV fov;
     List<Enemy> enemyList;
     List<Item> itemList;
+    
+    char[,] buffer;
     public Dictionary<char, ConsoleColor> colorMap {get; private set;}
 
-    
-    public Renderer(Dungeon d, Player p, List<Enemy> e, List<Item> i)
+    public Renderer(Dungeon d, Player p, FOV f, List<Enemy> e, List<Item> i)
     {
         dungeon = d;
         player = p;
+        fov = f;
         enemyList = e;
         itemList = i;
+        buffer = new char[dungeon.length, dungeon.width];
         colorMap = new()
         {
-            {'@', ConsoleColor.Green},
+            {'@', ConsoleColor.DarkRed},
             {'S', ConsoleColor.Cyan},
             {'G', ConsoleColor.DarkGreen},
-            {'!', ConsoleColor.Yellow},
-            {'>', ConsoleColor.White},
-            {'#', ConsoleColor.Gray},
-            {'.', ConsoleColor.Black}
+            {'!', ConsoleColor.DarkMagenta},
+            {'>', ConsoleColor.Yellow},
+            {'#', ConsoleColor.White},
+            {'.', ConsoleColor.Black},
+            {'░', ConsoleColor.Black}
         };
     }
 
     public char[,] DrawCall()
     {
-        char[,] buffer = new char[dungeon.length, dungeon.width];
+        Array.Clear(buffer, 0, buffer.Length);
         for(int i = 0; i < dungeon.length; i++)
         {
             for(int j = 0; j < dungeon.width; j++)
             {
-                buffer[i, j] = dungeon.map[i, j];
+                if (fov.isVisible[i, j]) 
+                {
+                    buffer[i, j] = dungeon.map[i, j];
+                }
+                else 
+                {
+                    buffer[i, j] = '░';
+                }
             }
         }
         foreach(Item item in itemList)
         {
-            buffer[item.Y, item.X] = item.Symbol;
+            if (fov.isVisible[item.Y, item.X])
+            {
+                buffer[item.Y, item.X] = item.Symbol;
+            }
         }
         foreach(Enemy enemy in enemyList)
         {
-            buffer[enemy.Y, enemy.X] = enemy.Symbol;
+            if (fov.isVisible[enemy.Y, enemy.X])
+            {
+                buffer[enemy.Y, enemy.X] = enemy.Symbol;
+            }
         }
-        buffer[player.Y, player.X] = '@';
+        buffer[player.Y, player.X] = player.Symbol;
         return buffer;
     }
     public void DrawUI(int floor)

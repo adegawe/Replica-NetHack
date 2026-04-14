@@ -6,6 +6,7 @@ class Entity
     public int Hp { get; protected set; }
     public int MaxHp { get; protected set; }
     public int Attack { get; protected set; }
+    public char Symbol { get; protected set; }
 
     public void Move(int dx, int dy)
     {

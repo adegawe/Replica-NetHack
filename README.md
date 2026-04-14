@@ -57,6 +57,8 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 | `Dungeon` | 맵 생성, 방/복도 배치 |
 | `Renderer` | 버퍼 기반 렌더링, UI 출력 |
 | `Control` | 입력 처리, 키 바인딩 |
+| `Pathfinding` | BFS, 길찾기 알고리즘. 매 BFS마다 배열을 새로 만드는 메모리 낭비를 줄이기 위해 빼놓음 |
+| `FieldOfView` | Shadowcasting을 이용한 시야처리 |
 
 ## 구현 완료
 
@@ -70,7 +72,6 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 
 ## 향후 계획
 
-- **FOV(시야 제한)** — Bresenham 또는 Raycasting 기반 시야 시스템. 탐색하지 않은 영역은 비가시 처리
 - **적 행동 다양화** — `Enemy` 클래스에 `virtual void Act()` 추가. 적 타입별 고유 행동 패턴 (추적, 순찰, 도주 등)
 - **장비 시스템** — 무기/방어구 장착, 스탯 반영
 - **스크롤/포션 효과 다양화** — 미확인 아이템 식별 시스템 (NetHack의 핵심 시스템)

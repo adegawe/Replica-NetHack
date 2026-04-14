@@ -4,6 +4,7 @@ class Game
     Player player = new();
     Dungeon dungeon = new();
     Control control = new();
+    FOV fov;
     Pathfinding pathfinding;
     List<Enemy> enemyList = [];
     List<Item> itemList = [];
@@ -12,10 +13,12 @@ class Game
     Renderer renderer;
     public bool gameOver = false;
     int floor = 1;
+    int fovLength = 11;
 
     public Game()
     {
-        renderer = new(dungeon, player, enemyList, itemList);
+        fov = new(dungeon.width, dungeon.length, dungeon.map);
+        renderer = new(dungeon, player, fov, enemyList, itemList);
         pathfinding = new(dungeon.width, dungeon.length);
         keyMap = new()
         {
@@ -135,6 +138,7 @@ class Game
 
     public void Render()
     {
+        fov.ComputeFOV(player.X, player.Y, fovLength);
         char[,] buffer = renderer.DrawCall();
         Console.SetCursorPosition(0, 0);
         for(int i = 0; i < dungeon.length; i++)

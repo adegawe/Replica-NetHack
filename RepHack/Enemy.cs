@@ -1,7 +1,6 @@
 namespace RepHack;
 class Enemy : Entity
 {
-    public char Symbol = 'E';
     public enum EnemyType { Goblin , Slime , Dragon};
     public EnemyType enemyType;
 
