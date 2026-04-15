@@ -31,7 +31,16 @@ class Renderer
         };
     }
 
-    public char[,] DrawCall()
+    public void Render(int floor)
+    {
+        fov.ComputeFOV(player.X, player.Y, player.fovLength);
+        Console.SetCursorPosition(0, 0);
+        DrawCall();
+        PrintBuffer();
+        DrawUI(floor);
+    }
+
+    public void DrawCall()
     {
         Array.Clear(buffer, 0, buffer.Length);
         for(int i = 0; i < dungeon.length; i++)
@@ -63,7 +72,26 @@ class Renderer
             }
         }
         buffer[player.Y, player.X] = player.Symbol;
-        return buffer;
+    }
+
+    public void PrintBuffer()
+    {
+        Console.SetCursorPosition(0, 0);
+        for(int i = 0; i < dungeon.length; i++)
+        {
+            for(int j = 0; j < dungeon.width; j++)
+            {
+                char text = buffer[i, j];
+                if(fov.isVisible[i, j] && colorMap.TryGetValue(text, out var color)) {}
+                else
+                {
+                    color = ConsoleColor.Black;
+                }
+                Console.ForegroundColor = color;
+                Console.Write(buffer[i, j]);
+            }
+            Console.Write('\n');
+        }
     }
     public void DrawUI(int floor)
     {

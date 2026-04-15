@@ -1,7 +1,8 @@
 namespace RepHack;
 class Player : Entity
 {
-    public readonly List<Item> inventory = [];
+    public readonly List<Item> inventory = new();
+    public int fovLength = 12;
     public int inventoryMax = 50;
     public Player()
     {

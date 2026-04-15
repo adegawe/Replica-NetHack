@@ -6,14 +6,13 @@ class Game
     Control control = new();
     FOV fov;
     Pathfinding pathfinding;
-    List<Enemy> enemyList = [];
-    List<Item> itemList = [];
+    List<Enemy> enemyList = new();
+    List<Item> itemList = new();
     Random random = new();
     Dictionary<Control.Actions, Action> keyMap;
     Renderer renderer;
     public bool gameOver = false;
     int floor = 1;
-    int fovLength = 11;
 
     public Game()
     {
@@ -139,25 +138,7 @@ class Game
 
     public void Render()
     {
-        fov.ComputeFOV(player.X, player.Y, fovLength);
-        char[,] buffer = renderer.DrawCall();
-        Console.SetCursorPosition(0, 0);
-        for(int i = 0; i < dungeon.length; i++)
-        {
-            for(int j = 0; j < dungeon.width; j++)
-            {
-                char text = buffer[i, j];
-                if(fov.isVisible[i, j] && renderer.colorMap.TryGetValue(text, out var color)) {}
-                else
-                {
-                    color = ConsoleColor.Black;
-                }
-                Console.ForegroundColor = color;
-                Console.Write(buffer[i, j]);
-            }
-            Console.Write('\n');
-        }
-        renderer.DrawUI(floor);
+        renderer.Render(floor);
     }
 
     public void GameOver()
