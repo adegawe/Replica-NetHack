@@ -38,7 +38,7 @@ class Node
 class Dungeon
 {
     public int roomNum;
-    public char[,] map;
+    public char[,] map {get; private set;}
     public List<Node> roomList = new List<Node>();
     public int width, length;
     private int minWidth = 12;

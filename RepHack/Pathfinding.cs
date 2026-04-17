@@ -1,14 +1,24 @@
 namespace RepHack;
+
+public class Tile
+{
+    public bool isBlocked;
+    public int distance;
+}
 class Pathfinding
 {
+    char[,] dungeonMap;
     (int, int)[,] cameFrom;
     bool[,] visited;
     Queue<(int x, int y)> queue = new();
+    Tile[,] map;
 
-    public Pathfinding(int width, int length)
+    public Pathfinding(int width, int length, char[,] dm)
     {
         cameFrom = new (int, int)[length, width];
         visited = new bool[length, width];
+        map = new Tile[length, width];
+        dungeonMap = dm;
     }
     public (int x, int y)? BFS(Enemy enemy, int playerX, int playerY, char[,] map, Func<int, int, Enemy?> isOccupied)
     {
@@ -57,6 +67,47 @@ class Pathfinding
         else
         {
             return null;
+        }
+    }
+
+    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, bool isNextMap)
+    {
+        if(isNextMap){ ClearMap();}
+        ClearDistances();
+        queue.Clear();
+
+        (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
+
+        while(queue.Count() > 0)
+        {
+            (int x, int y)pos = queue.Dequeue();
+            for(int i = 0; i < 4; i++)
+            {
+                int x = pos.x;
+            }
+        }
+        return map;
+    }
+
+    private void ClearMap()
+    {
+        for(int i = 0; i < map.GetLength(1); i++)
+        {
+            for(int j = 0; j < map.GetLength(0); j++)
+            {
+                map[i, j].isBlocked = dungeonMap[i, j] == '#';
+                
+            }
+        }
+    }
+    private void ClearDistances()
+    {
+        for(int i = 0; i < map.GetLength(1); i++)
+        {
+            for(int j = 0; j < map.GetLength(0); j++)
+            {
+                map[i, j].distance = int.MaxValue;
+            }
         }
     }
 }

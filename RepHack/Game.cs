@@ -18,7 +18,7 @@ class Game
     {
         fov = new(dungeon.width, dungeon.length, dungeon.map);
         renderer = new(dungeon, player, fov, enemyList, itemList);
-        pathfinding = new(dungeon.width, dungeon.length);
+        pathfinding = new(dungeon.width, dungeon.length, dungeon.map);
         keyMap = new()
         {
             {Control.Actions.MoveUp, () => ProcessMove(0, -1)},
@@ -150,6 +150,7 @@ class Game
     {
         foreach(Enemy enemy in enemyList)
         {
+            if(!fov.isVisible[enemy.Y, enemy.X]){ continue; }
             (int x, int y)? pos = pathfinding.BFS(enemy, player.X, player.Y, dungeon.map, (x, y) => IsOccupied(x, y));
             if(pos is (int x, int y))
             {
