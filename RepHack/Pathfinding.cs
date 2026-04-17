@@ -4,6 +4,7 @@ public class Tile
 {
     public bool isBlocked;
     public int distance;
+    public int cost;
 }
 class Pathfinding
 {
@@ -11,6 +12,7 @@ class Pathfinding
     (int, int)[,] cameFrom;
     bool[,] visited;
     Queue<(int x, int y)> queue = new();
+    PriorityQueue<(int x, int y), int> prioQueue = new();
     Tile[,] map;
 
     public Pathfinding(int width, int length, char[,] dm)
@@ -70,41 +72,88 @@ class Pathfinding
         }
     }
 
-    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, bool isNextMap)
+    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, Func<int, int, bool> isEnemyAt, bool isNextMap)
     {
-        if(isNextMap){ ClearMap();}
+        if(isNextMap){ ClearMap((x, y) => isEnemyAt(x, y));}
         ClearDistances();
-        queue.Clear();
+        prioQueue.Clear();
+        Array.Clear(visited, 0, visited.Length);
 
         (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
-
-        while(queue.Count() > 0)
+        map[playerY, playerX].distance = 0;
+        prioQueue.Enqueue((playerX, playerY), 0);
+        while(prioQueue.Count > 0)
         {
-            (int x, int y)pos = queue.Dequeue();
-            for(int i = 0; i < 4; i++)
+            (int x, int y)pos = prioQueue.Dequeue();
+            if(visited[pos.y, pos.x]) { continue; }
+            visited[pos.y, pos.x] = true;
+
+            foreach(var dir in dirs)
             {
-                int x = pos.x;
+                int x = pos.x + dir.dx;
+                int y = pos.y + dir.dy;
+                if(map[y, x].isBlocked || visited[y, x]){ continue; }
+
+                int moveCost = map[y, x].cost;
+                if(map[y, x].distance > map[pos.y, pos.x].distance + moveCost)
+                {
+                    map[y, x].distance = map[pos.y, pos.x].distance + moveCost;
+                    prioQueue.Enqueue((x, y), map[pos.y, pos.x].distance + moveCost);
+                }
             }
         }
         return map;
     }
 
-    private void ClearMap()
+    public (int x, int y) GetNextStep(Enemy enemy, Tile[,] map, Func<int, int, Enemy?> isOccupied)
     {
-        for(int i = 0; i < map.GetLength(1); i++)
+        (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
+        int minValue = map[enemy.X, enemy.Y].distance;
+        (int x, int y) minPos = (enemy.X, enemy.Y);
+        foreach(var dir in dirs)
         {
-            for(int j = 0; j < map.GetLength(0); j++)
+            int tempX = enemy.X + dir.dx;
+            int tempY = enemy.Y + dir.dy;
+            if (tempX < 0 || tempX >= map.GetLength(1) || 
+            tempY < 0 || tempY >= map.GetLength(0)){ continue; }
+            if(map[tempY, tempX].isBlocked) { continue; }
+            if(isOccupied(tempX, tempY) != null){ continue; }
+            if(map[tempY, tempX].distance < minValue)
             {
+                minValue = map[tempY, tempX].distance;
+                minPos = (tempX, tempY);
+            }
+        }
+        return minPos;
+    }
+
+    private void ClearMap(Func<int, int, bool> isEnemyAt)
+    {
+        for(int i = 0; i < map.GetLength(0); i++)
+        {
+            for(int j = 0; j < map.GetLength(1); j++)
+            {
+                if (map[i, j] == null) 
+                {
+                    map[i, j] = new Tile();
+                }
                 map[i, j].isBlocked = dungeonMap[i, j] == '#';
-                
+                if (isEnemyAt(j, i))
+                {
+                    map[i, j].cost = 10;
+                }
+                else
+                {
+                    map[i, j].cost = 1;
+                }
             }
         }
     }
     private void ClearDistances()
     {
-        for(int i = 0; i < map.GetLength(1); i++)
+        for(int i = 0; i < map.GetLength(0); i++)
         {
-            for(int j = 0; j < map.GetLength(0); j++)
+            for(int j = 0; j < map.GetLength(1); j++)
             {
                 map[i, j].distance = int.MaxValue;
             }

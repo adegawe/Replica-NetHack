@@ -20,7 +20,7 @@ class Renderer
         buffer = new char[dungeon.length, dungeon.width];
         colorMap = new()
         {
-            {'@', ConsoleColor.DarkRed},
+            {'@', ConsoleColor.Blue},
             {'S', ConsoleColor.Cyan},
             {'G', ConsoleColor.DarkGreen},
             {'!', ConsoleColor.DarkMagenta},

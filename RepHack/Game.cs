@@ -148,23 +148,25 @@ class Game
 
     private void EnemyTurn()
     {
+        var map = pathfinding.Dijkstra(player.X, player.Y, (x, y) => IsOccupied(x, y), (x, y) => IsOccupied(x, y) != null, true);
+        (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
         foreach(Enemy enemy in enemyList)
         {
-            if(!fov.isVisible[enemy.Y, enemy.X]){ continue; }
-            (int x, int y)? pos = pathfinding.BFS(enemy, player.X, player.Y, dungeon.map, (x, y) => IsOccupied(x, y));
-            if(pos is (int x, int y))
+            map[enemy.Y, enemy.X].cost = 10;
+        }
+        foreach(Enemy enemy in enemyList)
+        {
+            (int x, int y) pos = pathfinding.GetNextStep(enemy, map, (x, y) => IsOccupied(x, y));
+            
+            if(pos.x == player.X && pos.y == player.Y)
             {
-                if(x == player.X && y == player.Y)
-                {
-                    player.TakeDamage(enemy.Attack);
-                }
-                else
-                {
-                    enemy.Move(x - enemy.X, y - enemy.Y);
-                }
+                player.TakeDamage(enemy.Attack);
+            }
+            else
+            {
+                enemy.Move(pos.x - enemy.X, pos.y - enemy.Y);
             }
         }
-        return;
     }
 
 }
