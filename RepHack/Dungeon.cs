@@ -124,7 +124,7 @@ class Dungeon
 
     public void BSP(Node parent)
     {
-        if(parent.width < minWidth * 2|| parent.length < minLength * 2)
+        if(parent.width < minWidth * 2|| parent.length <= minLength * 2)
         {
             roomList.Add(parent);
             return;

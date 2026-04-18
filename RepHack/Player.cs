@@ -13,7 +13,7 @@ class Player : Entity
 
     public void PickUp(Item item)
     {
-        if(inventory.Count <= inventoryMax)
+        if(inventory.Count < inventoryMax)
         {
             inventory.Add(item);
         }

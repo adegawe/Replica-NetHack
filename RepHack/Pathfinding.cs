@@ -108,7 +108,7 @@ class Pathfinding
     public (int x, int y) GetNextStep(Enemy enemy, Tile[,] map, Func<int, int, Enemy?> isOccupied)
     {
         (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
-        int minValue = map[enemy.X, enemy.Y].distance;
+        int minValue = map[enemy.Y, enemy.X].distance;
         (int x, int y) minPos = (enemy.X, enemy.Y);
         foreach(var dir in dirs)
         {

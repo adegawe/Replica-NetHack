@@ -9,7 +9,7 @@ class Game
     List<Enemy> enemyList = new();
     List<Item> itemList = new();
     Random random = new();
-    Dictionary<Control.Actions, Action> keyMap;
+    Dictionary<Control.Actions, (Action, bool)> keyMap;
     Renderer renderer;
     public bool gameOver = false;
     int floor = 1;
@@ -21,12 +21,12 @@ class Game
         pathfinding = new(dungeon.width, dungeon.length, dungeon.map);
         keyMap = new()
         {
-            {Control.Actions.MoveUp, () => ProcessMove(0, -1)},
-            {Control.Actions.MoveDown, () => ProcessMove(0, 1)},
-            {Control.Actions.MoveLeft, () => ProcessMove(-1, 0)},
-            {Control.Actions.MoveRight, () => ProcessMove(1, 0)},
-            {Control.Actions.PickUp, () => ProcessPickUp(player.X, player.Y)},
-            {Control.Actions.OpenInventory, () => ProcessInventory()}
+            {Control.Actions.MoveUp, (() => ProcessMove(0, -1), true)},
+            {Control.Actions.MoveDown, (() => ProcessMove(0, 1), true)},
+            {Control.Actions.MoveLeft, (() => ProcessMove(-1, 0), true)},
+            {Control.Actions.MoveRight, (() => ProcessMove(1, 0), true)},
+            {Control.Actions.PickUp, (() => ProcessPickUp(player.X, player.Y), true)},
+            {Control.Actions.OpenInventory, (() => ProcessInventory(), false)}
         };
     }
 
@@ -53,7 +53,7 @@ class Game
             enemyList.Add(slime);
             enemyList.Add(goblin);
         }
-        for(int i = 0; i < 2; i++)
+        for(int i = 0; i < 110; i++)
         {
             Item potion = new PotionItem();
             int randomRoom = random.Next(0, activeRooms.Count);
@@ -65,9 +65,17 @@ class Game
     }
     public void Update()
     {
-        if(keyMap.TryGetValue(control.GetInput(), out Action? act))
+        if(keyMap.TryGetValue(control.GetInput(), out (Action action, bool isMove) entry))
         {
-            act.Invoke();
+            entry.action.Invoke();
+            if (!entry.isMove)
+            {
+                return;
+            }
+        }
+        else
+        {
+            return;
         }
         enemyList.RemoveAll(e => e.Hp <= 0);
         itemList.RemoveAll(i => i.PickedUp == true);
