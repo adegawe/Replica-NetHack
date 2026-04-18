@@ -82,12 +82,10 @@ class Renderer
             for(int j = 0; j < dungeon.width; j++)
             {
                 char text = buffer[i, j];
-                if(fov.isVisible[i, j] && colorMap.TryGetValue(text, out var color)) {}
-                else
-                {
-                    color = ConsoleColor.Black;
-                }
-                Console.ForegroundColor = color;
+                Console.ForegroundColor = (fov.isVisible[i, j] && 
+                                        colorMap.TryGetValue(text, out var color))
+                                        ? color
+                                        : ConsoleColor.Black;
                 Console.Write(buffer[i, j]);
             }
             Console.Write('\n');

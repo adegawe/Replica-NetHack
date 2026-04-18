@@ -158,10 +158,7 @@ class Game
     {
         var map = pathfinding.Dijkstra(player.X, player.Y, (x, y) => IsOccupied(x, y), (x, y) => IsOccupied(x, y) != null, true);
         (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
-        foreach(Enemy enemy in enemyList)
-        {
-            map[enemy.Y, enemy.X].cost = 10;
-        }
+        
         foreach(Enemy enemy in enemyList)
         {
             (int x, int y) pos = pathfinding.GetNextStep(enemy, map, (x, y) => IsOccupied(x, y));

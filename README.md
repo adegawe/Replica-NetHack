@@ -43,6 +43,7 @@ else if (wasWall && !isWall)
 BFS에서 다익스트라로 옮겨간 이유는, 이제 타일마다 cost를 추가하고, 모든 적이 같은 map을 공유함에 따라, 각 enemy마다 BFS를 계산하는 비용을 줄일 수 있기 때문이다.
 
 ```csharp
+//기존 방식
 // 경로 역추적: BFS로 플레이어까지의 경로를 찾은 뒤,
 // cameFrom 배열을 따라 시작점까지 역추적하여 "다음 한 칸"을 결정한다.
 var lastPos = pos;
@@ -53,7 +54,30 @@ while (pos != (enemyX, enemyY))
 }
 ```
 
-`Pathfinding` 클래스는 `cameFrom`, `visited`, `Queue`를 생성자에서 한 번 할당하고 `Array.Clear`로 재사용한다. 매 턴 배열을 새로 생성하는 GC 부담을 제거하기 위함이다.
+```csharp
+//개선 방식
+// 다익스트라 알고리즘을 이용해 맵 전체에 플레이어로부터의 거리(distance)를 미리 계산한 뒤 리턴. 적들은 자신의 인접한 타일의 distance만 비교해 가장 낮은 곳으로 이동할 수 있게 됩니다. 역추적 없이 O(1)의 비용으로 다음 단계를 결정한다.
+foreach(var dir in dirs)
+{
+    int nx = enemy.X + dir.dx;
+    int ny = enemy.Y + dir.dy;
+
+    // 경계 검사 및 장애물 확인
+    if (!IsValid(nx, ny) || map[ny, nx].isBlocked) continue;
+    
+    // 다른 개체가 점유 중인지 확인 (군집 충돌 방지)
+    if (isOccupied(nx, ny) != null) continue;
+
+    // 현재 기록된 최소 거리보다 더 낮은(플레이어와 가까운) 타일 선택
+    if (map[ny, nx].distance < minValue)
+    {
+        minValue = map[ny, nx].distance;
+        minPos = (nx, ny);
+    }
+}
+```
+
+`Pathfinding` 클래스는 `visited`, `PriorityQueue`를 생성자에서 한 번 할당하고 `Array.Clear`로 재사용한다. 매 턴 배열을 새로 생성하는 GC 부담을 제거하기 위함이다.
 
 ### 게임 루프
 

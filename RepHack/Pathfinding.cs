@@ -84,7 +84,8 @@ class Pathfinding
         prioQueue.Enqueue((playerX, playerY), 0);
         while(prioQueue.Count > 0)
         {
-            (int x, int y)pos = prioQueue.Dequeue();
+            if(!prioQueue.TryDequeue(out var pos, out var d)) { continue; }
+            if(d > map[pos.y, pos.x].distance) { continue; }
             if(visited[pos.y, pos.x]) { continue; }
             visited[pos.y, pos.x] = true;
 
