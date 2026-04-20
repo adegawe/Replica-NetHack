@@ -72,9 +72,9 @@ class Pathfinding
         }
     }
 
-    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, Func<int, int, bool> isEnemyAt, bool isNextMap)
+    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, Func<int, int, bool> isEnemyAt)
     {
-        if(isNextMap){ ClearMap((x, y) => isEnemyAt(x, y));}
+        ClearMap((x, y) => isEnemyAt(x, y));
         ClearDistances();
         prioQueue.Clear();
         Array.Clear(visited, 0, visited.Length);
@@ -93,6 +93,7 @@ class Pathfinding
             {
                 int x = pos.x + dir.dx;
                 int y = pos.y + dir.dy;
+                if (x < 0 || y < 0 || x >= map.GetLength(1) || y >= map.GetLength(0)) continue;
                 if(map[y, x].isBlocked || visited[y, x]){ continue; }
 
                 int moveCost = map[y, x].cost;

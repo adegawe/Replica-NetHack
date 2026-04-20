@@ -1,4 +1,5 @@
 namespace RepHack;
+
 class Game
 {
     Player player = new();
@@ -9,8 +10,9 @@ class Game
     List<Enemy> enemyList = new();
     List<Item> itemList = new();
     Random random = new();
-    Dictionary<Control.Actions, (Action, bool)> keyMap;
+    Dictionary<Control.Actions, (Action, bool)> actionMap;
     Renderer renderer;
+    TurnContext ctx;
     public bool gameOver = false;
     int floor = 1;
 
@@ -19,7 +21,10 @@ class Game
         fov = new(dungeon.width, dungeon.length, dungeon.map);
         renderer = new(dungeon, player, fov, enemyList, itemList);
         pathfinding = new(dungeon.width, dungeon.length, dungeon.map);
-        keyMap = new()
+        ctx = new TurnContext(player, pathfinding,
+        (x, y) => IsOccupied(x, y));
+
+        actionMap = new()
         {
             {Control.Actions.MoveUp, (() => ProcessMove(0, -1), true)},
             {Control.Actions.MoveDown, (() => ProcessMove(0, 1), true)},
@@ -37,8 +42,9 @@ class Game
         itemList.Clear();
         fov.ResetExplored();
         dungeon.InitDungeon();
-        player.Spawn(dungeon.roomList[0].RoomCenterX, dungeon.roomList[0].RoomCenterY);
+        ctx.ReCompute();
         var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
+        player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
         for(int i = 0; i < 2; i++)
         {
             Enemy slime = new Slime();
@@ -65,10 +71,10 @@ class Game
     }
     public void Update()
     {
-        if(keyMap.TryGetValue(control.GetInput(), out (Action action, bool isMove) entry))
+        if(actionMap.TryGetValue(control.GetInput(), out (Action action, bool isTurnAction) entry))
         {
             entry.action.Invoke();
-            if (!entry.isMove)
+            if (!entry.isTurnAction)
             {
                 return;
             }
@@ -77,6 +83,7 @@ class Game
         {
             return;
         }
+        ctx.ReCompute();
         enemyList.RemoveAll(e => e.Hp <= 0);
         itemList.RemoveAll(i => i.PickedUp == true);
         if(dungeon.map[player.Y, player.X] == '>')
@@ -155,23 +162,33 @@ class Game
     }
 
     private void EnemyTurn()
-    {
-        var map = pathfinding.Dijkstra(player.X, player.Y, (x, y) => IsOccupied(x, y), (x, y) => IsOccupied(x, y) != null, true);
-        (int dx, int dy)[] dirs = {(0,1), (0,-1), (1,0), (-1,0)};
-        
+    {        
         foreach(Enemy enemy in enemyList)
         {
-            (int x, int y) pos = pathfinding.GetNextStep(enemy, map, (x, y) => IsOccupied(x, y));
-            
-            if(pos.x == player.X && pos.y == player.Y)
-            {
-                player.TakeDamage(enemy.Attack);
-            }
-            else
-            {
-                enemy.Move(pos.x - enemy.X, pos.y - enemy.Y);
-            }
+            enemy.Act(ctx);
         }
     }
+}
 
+class TurnContext
+{
+    public Player player { get; }
+    public Pathfinding pathfinding { get; }
+    public Func<int, int, Enemy?> IsOccupied { get; }
+    public Tile[,] distanceMap { get; private set; }
+    private readonly Func<int,int,bool> isEnemyAtCached;
+    public TurnContext(Player p, Pathfinding path, Func<int, int, Enemy?> i)
+    {
+        player = p;
+        pathfinding = path;
+        IsOccupied = i;
+        isEnemyAtCached = (x, y) => IsOccupied(x, y) != null;
+        ReCompute();
+    }
+    
+    public void ReCompute()
+    {
+        distanceMap = pathfinding.Dijkstra(player.X, player.Y, 
+        IsOccupied, isEnemyAtCached);
+    }
 }
