@@ -1,4 +1,5 @@
 namespace RepHack;
+using System.Text;
 class Renderer
 {
     Dungeon dungeon;
@@ -6,6 +7,7 @@ class Renderer
     FOV fov;
     List<Enemy> enemyList;
     List<Item> itemList;
+    StringBuilder sb = new();
     
     char[,] buffer;
     public Dictionary<char, ConsoleColor> colorMap {get; private set;}
@@ -77,17 +79,31 @@ class Renderer
     public void PrintBuffer()
     {
         Console.SetCursorPosition(0, 0);
+        ConsoleColor lastCs = ConsoleColor.Black;
         for(int i = 0; i < dungeon.length; i++)
         {
             for(int j = 0; j < dungeon.width; j++)
             {
                 char text = buffer[i, j];
-                Console.ForegroundColor = (fov.isVisible[i, j] && 
-                                        colorMap.TryGetValue(text, out var color))
-                                        ? color
-                                        : ConsoleColor.Black;
-                Console.Write(buffer[i, j]);
+                ConsoleColor color;
+                if(fov.isVisible[i, j]){colorMap.TryGetValue(text, out color);}
+                else{color = ConsoleColor.Black;}
+                if(lastCs == color)
+                {
+                    sb.Append(text);
+                    lastCs = color;
+                }
+                else{
+                    Console.ForegroundColor = lastCs;
+                    Console.Write(sb.ToString());
+                    sb.Clear();
+                    sb.Append(text);
+                    lastCs = color;
+                }
             }
+            Console.ForegroundColor = lastCs;
+            Console.Write(sb.ToString());
+            sb.Clear();
             Console.Write('\n');
         }
     }

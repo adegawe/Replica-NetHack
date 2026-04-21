@@ -3,7 +3,7 @@ class Program
 {
     static void Main()
     {
-        const int FRAME_DELEAY = 16;
+        const int FRAME_DELAY = 32;
         Console.CursorVisible = false;
         Game game = new();
         game.Start();
@@ -20,7 +20,7 @@ class Program
                 return;
             }
             game.Render();
-            Thread.Sleep(FRAME_DELEAY);
+            Thread.Sleep(FRAME_DELAY);
         }
     }
 }

@@ -6,7 +6,6 @@ struct Room
 
     public int CenterX => x + width / 2;
     public int CenterY => y + length / 2;
-    public bool isActive;
 }
 
 class Node

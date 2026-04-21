@@ -29,7 +29,7 @@ class FOV
     {
         if(distance >= fovLength){ return; }
         if(distance == 0){ return; }
-
+        isVisible[playerY, playerX] = true;
         bool wasWall = false;
         float currentStartSlope = startSlope;
 

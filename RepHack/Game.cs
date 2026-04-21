@@ -90,6 +90,7 @@ class Game
         {
             floor++;
             Start();
+            return; //층을 넘길 시 적 턴 스킵
         }
         EnemyTurn();
         if(player.Hp <= 0)

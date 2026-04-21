@@ -1,9 +1,6 @@
 namespace RepHack;
 class Enemy : Entity
 {
-    public enum EnemyType { Goblin , Slime , Dragon};
-    public EnemyType enemyType;
-
     public virtual void Act(TurnContext ctx)
     {
         (int x, int y) pos = ctx.pathfinding.GetNextStep(this, ctx.distanceMap, (x ,y) => ctx.IsOccupied(x, y));
