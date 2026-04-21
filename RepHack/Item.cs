@@ -24,7 +24,10 @@ class Item
         Y = y;
     }
 
-    public virtual void Use(Player player) { }
+    public virtual bool Use(Player player) 
+    {
+        return true;
+    }
 }
 
 class WeaponItem : Item
@@ -37,7 +40,7 @@ class WeaponItem : Item
         Symbol = ')';
     }
     
-    public override void Use(Player player) {  }
+    public override bool Use(Player player) { return true; }
 }
 
 class PotionItem : Item
@@ -50,5 +53,11 @@ class PotionItem : Item
         Uses = 2;
         Consumable = true;
     }
-    public override void Use(Player player) { player.Heal(healAmount); Uses -= 1; }
+    public override bool Use(Player player) 
+    {
+        player.Heal(healAmount);
+        Uses -= 1;
+        if(Uses <= 0){ return true; }
+        return false;
+    }
 }

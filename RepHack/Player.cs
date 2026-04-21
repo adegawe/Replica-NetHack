@@ -21,13 +21,7 @@ class Player : Entity
 
     public void Use(int index)
     {
-        inventory[index].Use(this);
-        if(inventory[index].Consumable)
-        {
-            if(inventory[index].Uses <= 0)
-            {
-                inventory.RemoveAt(index);
-            }
-        }
+        bool shouldRemove = inventory[index].Use(this);
+        if(shouldRemove){ inventory.RemoveAt(index); }
     }
 }
