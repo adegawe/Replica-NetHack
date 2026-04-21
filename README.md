@@ -99,6 +99,12 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 
 시야 시스템과 연동되어, 현재 시야에 있는 타일은 `map` 기준으로 원래 색상으로 그리고, 탐색했지만 시야 밖인 타일은 어둡게 그리며, 미탐색 영역은 공백으로 처리한다. 적과 아이템은 시야 안에서만 보인다.
 
+추가)
+
+(1) 같은 색 연속 구간을 StringBuilder로 묶어 한 번에 출력하는 배치 렌더링을 적용해 Console.Write와 ForegroundColor 변경 호출 수를 대폭 줄였다.
+
+(2) 시야 시스템(isVisible)과 탐색 기록(isExplored)을 분리해 사용하며, 현재 시야 안 타일은 colorMap 기반 원색, 탐색했지만 시야 밖인 타일은 맵 구조를 유지한 채 어둡게, 미탐색 영역은 공백 블록으로 표시한다.
+
 ### 클래스 구조
 
 | 클래스 | 역할 |
