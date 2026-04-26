@@ -1,0 +1,82 @@
+[
+  {
+    "name": "Slime",
+    "hp": 10,
+    "attack": 3,
+    "symbol": "S",
+    "color": "DarkGreen",
+    "behavior": "chase",
+    "minFloor": 1,
+    "weight": 10
+  },
+  {
+    "name": "Bat",
+    "hp": 8,
+    "attack": 4,
+    "symbol": "B",
+    "color": "DarkGray",
+    "behavior": "random_chase",
+    "minFloor": 1,
+    "weight": 8
+  },
+  {
+    "name": "Goblin",
+    "hp": 15,
+    "attack": 5,
+    "symbol": "G",
+    "color": "Green",
+    "behavior": "chase",
+    "minFloor": 2,
+    "weight": 7
+  },
+  {
+    "name": "Orc",
+    "hp": 25,
+    "attack": 8,
+    "symbol": "O",
+    "color": "DarkRed",
+    "behavior": "chase",
+    "minFloor": 4,
+    "weight": 5
+  },
+  {
+    "name": "Werewolf",
+    "hp": 30,
+    "attack": 10,
+    "symbol": "W",
+    "color": "Gray",
+    "behavior": "chase_close_buff",
+    "minFloor": 6,
+    "weight": 4
+  },
+  {
+    "name": "Vampire",
+    "hp": 35,
+    "attack": 12,
+    "symbol": "V",
+    "color": "DarkMagenta",
+    "behavior": "chase_drain",
+    "minFloor": 8,
+    "weight": 3
+  },
+  {
+    "name": "DragonHatchling",
+    "hp": 40,
+    "attack": 10,
+    "symbol": "h",
+    "color": "Yellow",
+    "behavior": "chase_ranged_warn",
+    "minFloor": 9,
+    "weight": 2
+  },
+  {
+    "name": "Dragon",
+    "hp": 60,
+    "attack": 15,
+    "symbol": "D",
+    "color": "Red",
+    "behavior": "chase_ranged_instant",
+    "minFloor": 10,
+    "weight": 1
+  }
+]

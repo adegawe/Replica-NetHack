@@ -1,6 +1,8 @@
 # RepHack
 
 C# 콘솔 기반 ASCII 로그라이크. NetHack에서 영감을 받아 제작.
+원래 NetHack을 만들면서 게임개발에 주로 쓰이는 알고리즘 학습용으로 개발했으나, 갈수록 독자적인 판단으로 만드는 경우가 늘어나 목표가 완성으로 바뀌게 되었음.
+대부분은 오버엔지니어링을 자제하였으나, json 방식과 같은 게임개발에 많이 쓰이는 방식의 경우에는 학습을 위해 쓰는 경우가 있음.
 
 ![gameplay](./screenshots/gameplay.gif)
 
@@ -112,7 +114,7 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 | `Game` | 게임 루프, 시스템 간 조율 |
 | `Entity` | 플레이어/적 공통 베이스. 좌표, HP, 이동, 피격 |
 | `Player` | 플레이어 상태, 인벤토리 |
-| `Enemy` | 적 베이스 클래스. `Slime`, `Goblin` 등이 상속 |
+| `Enemy` | 적 인스턴스. 스탯과 IEnemyBehavior를 가지며 Act 호출 시 행동 위임 |
 | `Item` | 아이템 베이스 클래스. `PotionItem`, `WeaponItem` 등이 상속 |
 | `Dungeon` | BSP 기반 맵 생성, 방/복도 배치 |
 | `FieldOfView` | Recursive Shadowcasting, 탐색 기록 관리 |

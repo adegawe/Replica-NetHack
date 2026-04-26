@@ -15,6 +15,7 @@ class Game
     TurnContext ctx;
     public bool gameOver = false;
     int floor = 1;
+    int minMonster = 3;
 
     public Game()
     {
@@ -38,27 +39,16 @@ class Game
     public void Start()
     {
         dungeon.roomList.Clear();
-        enemyList.Clear();
         itemList.Clear();
         fov.ResetExplored();
         dungeon.InitDungeon();
         ctx.ReCompute();
         var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
-        for(int i = 0; i < 2; i++)
-        {
-            Enemy slime = new Slime();
-            Enemy goblin = new Goblin();
-            int randomRoom = random.Next(0, activeRooms.Count);
-            int x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
-            int y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
-            slime.Spawn(x, y);
-            x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
-            y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
-            goblin.Spawn(x, y);
-            enemyList.Add(slime);
-            enemyList.Add(goblin);
-        }
+        var activeEnemy = EnemyLoader.Load().Where(data => data.MinFloor <= floor).ToList();
+        enemyList.Clear();
+        enemyList.AddRange(GetRandomEnemies(minMonster + floor, activeEnemy));
+        SpawnEnemies(enemyList, activeRooms);
         for(int i = 0; i < 110; i++)
         {
             Item potion = new PotionItem();
@@ -167,6 +157,42 @@ class Game
         foreach(Enemy enemy in enemyList)
         {
             enemy.Act(ctx);
+        }
+    }
+    private List<Enemy> GetRandomEnemies(int requiredNum, List<EnemyData> enemyList)
+    {
+        int totalWeight = 0;
+        List<Enemy> enemies = new();
+        foreach(EnemyData enemyData in enemyList)
+        {
+            totalWeight += enemyData.Weight;
+        }
+        for(int i = 0; i < requiredNum; i++)
+        {
+            int cumulative = 0;
+            int pick = random.Next(0, totalWeight);
+            foreach (EnemyData enemyData in enemyList)
+            {
+                cumulative += enemyData.Weight;
+                if(cumulative > pick)
+                {
+                    Enemy enemy = EnemyFactory.Create(enemyData); //밖에 빼둘까 했는데 가독성으로 이게 더 좋아서 유지
+                    enemies.Add(enemy);
+                    break;
+                }
+            }
+        }
+        return enemies;
+    }
+
+    private void SpawnEnemies(List<Enemy> enemyList, List<Node> roomList)
+    {
+        foreach(Enemy enemy in enemyList)
+        {
+            int randomRoom = random.Next(0, roomList.Count);
+            int randomX = random.Next(roomList[randomRoom].RoomX, roomList[randomRoom].RoomX + roomList[randomRoom].RoomWidth);
+            int randomY = random.Next(roomList[randomRoom].RoomY, roomList[randomRoom].RoomY + roomList[randomRoom].RoomLength);
+            enemy.Spawn(randomX, randomY);
         }
     }
 }
