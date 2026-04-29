@@ -2,6 +2,10 @@ namespace RepHack;
 class Enemy : Entity
 {
     IEnemyBehavior behavior;
+    public IRangedEnemy? GetRangedBehavior()
+    {
+        return behavior as IRangedEnemy;
+    }
     public Enemy(EnemyData data, IEnemyBehavior behavior)
     {
         MaxHp = data.Hp;

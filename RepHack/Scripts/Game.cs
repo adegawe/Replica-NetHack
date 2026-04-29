@@ -1,5 +1,5 @@
 namespace RepHack;
-
+using System.Diagnostics;
 class Game
 {
     Player player = new();
@@ -16,6 +16,7 @@ class Game
     public bool gameOver = false;
     int floor = 1;
     int minMonster = 3;
+    List<EnemyData> enemyData = EnemyLoader.Load();
 
     public Game()
     {
@@ -24,6 +25,7 @@ class Game
         pathfinding = new(dungeon.width, dungeon.length, dungeon.map);
         ctx = new TurnContext(player, pathfinding,
         (x, y) => IsOccupied(x, y));
+        renderer.RegisterEnemyColors(enemyData);
 
         actionMap = new()
         {
@@ -45,11 +47,11 @@ class Game
         ctx.ReCompute();
         var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
-        var activeEnemy = EnemyLoader.Load().Where(data => data.MinFloor <= floor).ToList();
+        var activeEnemy = enemyData.Where(data => data.MinFloor <= floor).ToList();
         enemyList.Clear();
         enemyList.AddRange(GetRandomEnemies(minMonster + floor, activeEnemy));
         SpawnEnemies(enemyList, activeRooms);
-        for(int i = 0; i < 110; i++)
+        for(int i = 0; i < 10; i++)
         {
             Item potion = new PotionItem();
             int randomRoom = random.Next(0, activeRooms.Count);
@@ -61,6 +63,7 @@ class Game
     }
     public void Update()
     {
+        var sw = Stopwatch.StartNew();
         if(actionMap.TryGetValue(control.GetInput(), out (Action action, bool isTurnAction) entry))
         {
             entry.action.Invoke();
@@ -86,6 +89,14 @@ class Game
         if(player.Hp <= 0)
         {
             gameOver = true;
+        }
+        sw.Stop();
+        if(sw.ElapsedTicks > 10000)
+        {
+            File.AppendAllText(
+                Path.Combine(AppContext.BaseDirectory, "perf.log"),
+                $"floor={floor},enemies={enemyList.Count},ticks={sw.ElapsedTicks}\n"
+            );
         }
     }
 

@@ -8,6 +8,7 @@ class Renderer
     List<Enemy> enemyList;
     List<Item> itemList;
     StringBuilder sb = new();
+    HashSet<(int x, int y)> dangerCells = new();
     
     char[,] buffer;
     public Dictionary<char, ConsoleColor> colorMap {get; private set;}
@@ -23,8 +24,6 @@ class Renderer
         colorMap = new()
         {
             {'@', ConsoleColor.Blue},
-            {'S', ConsoleColor.Cyan},
-            {'G', ConsoleColor.DarkGreen},
             {'!', ConsoleColor.DarkMagenta},
             {'>', ConsoleColor.Yellow},
             {'#', ConsoleColor.White},
@@ -45,6 +44,7 @@ class Renderer
     public void DrawCall()
     {
         Array.Clear(buffer, 0, buffer.Length);
+        dangerCells.Clear();
         for(int i = 0; i < dungeon.length; i++)
         {
             for(int j = 0; j < dungeon.width; j++)
@@ -72,6 +72,11 @@ class Renderer
             {
                 buffer[enemy.Y, enemy.X] = enemy.Symbol;
             }
+            var ranged = enemy.GetRangedBehavior();
+            if (ranged != null)
+            {
+                dangerCells.UnionWith(ranged.AttackLine);
+            }
         }
         buffer[player.Y, player.X] = player.Symbol;
     }
@@ -86,7 +91,13 @@ class Renderer
             {
                 char text = buffer[i, j];
                 ConsoleColor color;
-                if(fov.isVisible[i, j]){colorMap.TryGetValue(text, out color);}
+                if(fov.isVisible[i, j]){
+                    if(dangerCells.Contains((j, i)))
+                    {
+                        color = ConsoleColor.Red;
+                    }
+                    else{ colorMap.TryGetValue(text, out color); }
+                }
                 else{color = ConsoleColor.Black;}
                 if(lastCs == color)
                 {
@@ -140,5 +151,14 @@ class Renderer
         Console.WriteLine("║           Press any key to quit            ║");
         Console.WriteLine("║                                            ║");
         Console.WriteLine("╚════════════════════════════════════════════╝");
+    }
+
+    public void RegisterEnemyColors(List<EnemyData> EnemyData)
+    {
+        foreach(var enemyData in EnemyData)
+        {
+            var color = Enum.Parse<ConsoleColor>(enemyData.Color);
+            colorMap.Add(enemyData.Symbol[0], color);
+        }
     }
 }
