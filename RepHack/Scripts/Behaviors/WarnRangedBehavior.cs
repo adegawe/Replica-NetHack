@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 class WarnRangedBehavior : IRangedEnemy
 {
     private enum Status { Idle, Warning, Attack }

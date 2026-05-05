@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 class RandomChaseBehavior : IEnemyBehavior
 {
     ChaseBehavior chase = new();

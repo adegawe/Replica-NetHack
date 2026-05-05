@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 class InstantRangedBehavior : IRangedEnemy
 {
     private enum Status { Idle,  Attack }

@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 class ChaseBehavior : IEnemyBehavior
 {
     public void Execute(Enemy self, TurnContext ctx)

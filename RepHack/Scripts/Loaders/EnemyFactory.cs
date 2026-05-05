@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 static class EnemyFactory
 {
     static Dictionary<string, Func<IEnemyBehavior>> behaviors;

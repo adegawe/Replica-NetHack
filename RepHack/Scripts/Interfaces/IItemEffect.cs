@@ -1,0 +1,5 @@
+namespace RepHack;
+interface IItemEffect
+{
+    
+}

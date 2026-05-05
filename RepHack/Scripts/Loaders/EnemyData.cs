@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 class EnemyData
 {
     public string Name { get; set; } = "Unknown";

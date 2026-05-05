@@ -1,4 +1,4 @@
-using RepHack;
+namespace RepHack;
 using System.Text.Json;
 using System.IO;
 
