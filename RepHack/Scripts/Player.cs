@@ -7,7 +7,7 @@ class Player : Entity
     public Player()
     {
         Attack = 50;
-        MaxHp = 20;
+        MaxHp = 70;
         Symbol = '@';
     }
 

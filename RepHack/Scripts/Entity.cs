@@ -7,13 +7,14 @@ class Entity
     public int MaxHp { get; protected set; }
     public int Attack { get; protected set; }
     public char Symbol { get; protected set; }
-
     public void Move(int dx, int dy)
     {
+        int oldX = X, oldY = Y;
         X += dx;
         Y += dy;
+        OnMoved(oldX, oldY);
     }
-
+    protected virtual void OnMoved(int oldX, int oldY){}
     public void Spawn(int x, int y)
     {
         X = x;
@@ -27,10 +28,10 @@ class Entity
         if(Hp <= 0)
         {
             Hp = 0;
-            //Died
+            OnDied(X, Y);
         }
     }
-
+    protected virtual void OnDied(int oldX, int oldY){}
     public void Heal(int amount)
     {
         Hp += amount;

@@ -1,10 +1,12 @@
+![gameicon](./screenshots/gameicon.png)
+
 # RepHack
 
 C# 콘솔 기반 ASCII 로그라이크. NetHack에서 영감을 받아 제작.
 원래 NetHack을 만들면서 게임개발에 주로 쓰이는 알고리즘 학습용으로 개발했으나, 갈수록 독자적인 판단으로 만드는 경우가 늘어나 목표가 완성으로 바뀌게 되었음.
 대부분은 오버엔지니어링을 자제하였으나, json 방식과 같은 게임개발에 많이 쓰이는 방식의 경우에는 학습을 위해 쓰는 경우가 있음.
 
-![gameplay](./screenshots/gameplay.gif)
+![gameplay](./screenshots/gameplay.png)
 
 ## 핵심 시스템
 
@@ -78,6 +80,7 @@ foreach(var dir in dirs)
         minPos = (nx, ny);
     }
 }
+IsOccupied를 List → Dictionary 자료구조 변경 후 N=35 기준 IsOccupied 평균 30% 빠름 측정. ToList 매턴 할당으로 GC spike 비율 1% → 2.4% 증가했지만 무시 수준.
 ```
 
 `Pathfinding` 클래스는 `visited`, `PriorityQueue`를 생성자에서 한 번 할당하고 `Array.Clear`로 재사용한다. 매 턴 배열을 새로 생성하는 GC 부담을 제거하기 위함이다.
@@ -150,7 +153,7 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 | `↑↓←→` | 이동 / 인접한 적 공격 |
 | `,` | 아이템 줍기 |
 | `I` | 인벤토리 열기 |
-| `Q` | 포션 사용 |
+| `a~z` | 포션 사용 |
 
 ## 빌드
 

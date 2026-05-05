@@ -14,6 +14,8 @@ class Pathfinding
     Queue<(int x, int y)> queue = new();
     PriorityQueue<(int x, int y), int> prioQueue = new();
     Tile[,] map;
+    int enemyTileCost = 10;
+    int basicTileCost = 1;
 
     public Pathfinding(int width, int length, char[,] dm)
     {
@@ -22,6 +24,7 @@ class Pathfinding
         map = new Tile[length, width];
         dungeonMap = dm;
     }
+    //플레이어 다중 이동용으로 남겨둠.
     public (int x, int y)? BFS(Enemy enemy, int playerX, int playerY, char[,] map, Func<int, int, Enemy?> isOccupied)
     {
         Array.Clear(cameFrom, 0, cameFrom.Length);
@@ -72,10 +75,9 @@ class Pathfinding
         }
     }
 
-    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, Enemy?> isOccupied, Func<int, int, bool> isEnemyAt)
+    public Tile[,] Dijkstra(int playerX, int playerY, Func<int, int, bool> isEnemyAt)
     {
         ClearMap((x, y) => isEnemyAt(x, y));
-        ClearDistances();
         prioQueue.Clear();
         Array.Clear(visited, 0, visited.Length);
 
@@ -142,21 +144,12 @@ class Pathfinding
                 map[i, j].isBlocked = dungeonMap[i, j] == '#';
                 if (isEnemyAt(j, i))
                 {
-                    map[i, j].cost = 10;
+                    map[i, j].cost = enemyTileCost;
                 }
                 else
                 {
-                    map[i, j].cost = 1;
+                    map[i, j].cost = basicTileCost;
                 }
-            }
-        }
-    }
-    private void ClearDistances()
-    {
-        for(int i = 0; i < map.GetLength(0); i++)
-        {
-            for(int j = 0; j < map.GetLength(1); j++)
-            {
                 map[i, j].distance = int.MaxValue;
             }
         }

@@ -7,9 +7,9 @@ class Game
     Control control = new();
     FOV fov;
     Pathfinding pathfinding;
-    List<Enemy> enemyList = new();
     List<Item> itemList = new();
     Random random = new();
+    EnemyRegistry enemyRegistry = new();
     Dictionary<Control.Actions, (Action, bool)> actionMap;
     Renderer renderer;
     TurnContext ctx;
@@ -21,10 +21,10 @@ class Game
     public Game()
     {
         fov = new(dungeon.width, dungeon.length, dungeon.map);
-        renderer = new(dungeon, player, fov, enemyList, itemList);
+        renderer = new(dungeon, player, fov, enemyRegistry, itemList);
         pathfinding = new(dungeon.width, dungeon.length, dungeon.map);
         ctx = new TurnContext(player, pathfinding,
-        (x, y) => IsOccupied(x, y));
+        (x, y) => enemyRegistry.IsOccupied(x, y));
         renderer.RegisterEnemyColors(enemyData);
 
         actionMap = new()
@@ -48,9 +48,12 @@ class Game
         var activeRooms = dungeon.roomList.Where(n=> n.isActive).ToList();
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
         var activeEnemy = enemyData.Where(data => data.MinFloor <= floor).ToList();
-        enemyList.Clear();
-        enemyList.AddRange(GetRandomEnemies(minMonster + floor, activeEnemy));
-        SpawnEnemies(enemyList, activeRooms);
+        enemyRegistry.Clear();
+        var enemies = GetRandomEnemies(minMonster + floor, activeEnemy);
+        SpawnEnemies(enemies, activeRooms);
+        foreach (Enemy enemy in enemies){
+            enemyRegistry.Add(enemy);
+        }
         for(int i = 0; i < 10; i++)
         {
             Item potion = new PotionItem();
@@ -77,7 +80,6 @@ class Game
             return;
         }
         ctx.ReCompute();
-        enemyList.RemoveAll(e => e.Hp <= 0);
         itemList.RemoveAll(i => i.PickedUp == true);
         if(dungeon.map[player.Y, player.X] == '>')
         {
@@ -95,7 +97,7 @@ class Game
         {
             File.AppendAllText(
                 Path.Combine(AppContext.BaseDirectory, "perf.log"),
-                $"floor={floor},enemies={enemyList.Count},ticks={sw.ElapsedTicks}\n"
+                $"floor={floor},enemies={enemyRegistry.count},ticks={sw.ElapsedTicks}\n"
             );
         }
     }
@@ -104,10 +106,14 @@ class Game
     {
         if(Control.IsCanMove(player.X + dx, player.Y + dy, dungeon.map))
         {
-            Enemy? tempEnemy = IsOccupied(player.X + dx, player.Y + dy);
+            Enemy? tempEnemy = enemyRegistry.IsOccupied(player.X + dx, player.Y + dy);
             if(tempEnemy != null)
             {
                 tempEnemy.TakeDamage(player.Attack);
+                if(tempEnemy.Hp <= 0)
+                {
+                    enemyRegistry.Remove(tempEnemy);
+                }
                 return;
             }
             player.Move(dx, dy);
@@ -141,18 +147,6 @@ class Game
         }
     }
 
-    private Enemy? IsOccupied(int dx, int dy)
-    {
-        foreach(Enemy enemy in enemyList)
-        {
-            if(enemy.X == dx && enemy.Y == dy)
-            {
-                return enemy;
-            }
-        }
-        return null;
-    }
-
     public void Render()
     {
         renderer.Render(floor);
@@ -165,16 +159,16 @@ class Game
 
     private void EnemyTurn()
     {        
-        foreach(Enemy enemy in enemyList)
+        foreach(Enemy enemy in enemyRegistry.enemyList.ToList())
         {
             enemy.Act(ctx);
         }
     }
-    private List<Enemy> GetRandomEnemies(int requiredNum, List<EnemyData> enemyList)
+    private List<Enemy> GetRandomEnemies(int requiredNum, List<EnemyData> candidates)
     {
         int totalWeight = 0;
         List<Enemy> enemies = new();
-        foreach(EnemyData enemyData in enemyList)
+        foreach(EnemyData enemyData in candidates)
         {
             totalWeight += enemyData.Weight;
         }
@@ -182,7 +176,7 @@ class Game
         {
             int cumulative = 0;
             int pick = random.Next(0, totalWeight);
-            foreach (EnemyData enemyData in enemyList)
+            foreach (EnemyData enemyData in candidates)
             {
                 cumulative += enemyData.Weight;
                 if(cumulative > pick)
@@ -196,14 +190,25 @@ class Game
         return enemies;
     }
 
-    private void SpawnEnemies(List<Enemy> enemyList, List<Node> roomList)
+    private void SpawnEnemies(List<Enemy> enemiesToSpawn, List<Node> roomList)
     {
-        foreach(Enemy enemy in enemyList)
+        List<(int x, int y)> activeCells = new();
+        foreach(Node node in roomList)
         {
-            int randomRoom = random.Next(0, roomList.Count);
-            int randomX = random.Next(roomList[randomRoom].RoomX, roomList[randomRoom].RoomX + roomList[randomRoom].RoomWidth);
-            int randomY = random.Next(roomList[randomRoom].RoomY, roomList[randomRoom].RoomY + roomList[randomRoom].RoomLength);
-            enemy.Spawn(randomX, randomY);
+            for(int i = node.RoomY; i < node.RoomY + node.RoomLength; i++)
+            {
+                for(int j = node.RoomX; j < node.RoomX + node.RoomWidth; j++)
+                {
+                    activeCells.Add((j, i));
+                }
+            }
+        }
+        foreach(Enemy enemy in enemiesToSpawn)
+        {
+            if(activeCells.Count <= 0) { break; }
+            var randomPos = activeCells[random.Next(0, activeCells.Count)];
+            enemy.Spawn(randomPos.x, randomPos.y);
+            activeCells.Remove(randomPos);
         }
     }
 }
@@ -227,6 +232,6 @@ class TurnContext
     public void ReCompute()
     {
         distanceMap = pathfinding.Dijkstra(player.X, player.Y, 
-        IsOccupied, isEnemyAtCached);
+         isEnemyAtCached);
     }
 }

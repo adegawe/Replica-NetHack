@@ -5,7 +5,7 @@ class Renderer
     Dungeon dungeon;
     Player player;
     FOV fov;
-    List<Enemy> enemyList;
+    EnemyRegistry enemyRegistry;
     List<Item> itemList;
     StringBuilder sb = new();
     HashSet<(int x, int y)> dangerCells = new();
@@ -13,12 +13,12 @@ class Renderer
     char[,] buffer;
     public Dictionary<char, ConsoleColor> colorMap {get; private set;}
 
-    public Renderer(Dungeon d, Player p, FOV f, List<Enemy> e, List<Item> i)
+    public Renderer(Dungeon d, Player p, FOV f, EnemyRegistry e, List<Item> i)
     {
         dungeon = d;
         player = p;
         fov = f;
-        enemyList = e;
+        enemyRegistry = e;
         itemList = i;
         buffer = new char[dungeon.length, dungeon.width];
         colorMap = new()
@@ -66,7 +66,7 @@ class Renderer
                 buffer[item.Y, item.X] = item.Symbol;
             }
         }
-        foreach(Enemy enemy in enemyList)
+        foreach(Enemy enemy in enemyRegistry.enemyList)
         {
             if (fov.isVisible[enemy.Y, enemy.X])
             {
