@@ -1,0 +1,31 @@
+[
+    {
+        "name": "Water",
+        "symbol": "!",
+        "color": "Blue",
+        "category": "potion",
+        "effectType": "water",
+        "effectValue": 0,
+        "uses": 1,
+        "consumable": true
+    },
+    {
+        "name": "Healing Potion",
+        "symbol": "!",
+        "color": "Red",
+        "category": "potion",
+        "effectType": "heal",
+        "effectValue": 20,
+        "uses": 2,
+        "consumable": true
+    },
+    {
+        "name": "Dizzy Potion",
+        "symbol": "!",
+        "color": "Blue",
+        "category": "potion",
+        "effectType": "dizzy",
+        "effectValue": 20,
+        "consumable": true
+    }
+]

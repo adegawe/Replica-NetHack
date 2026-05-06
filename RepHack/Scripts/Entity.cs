@@ -6,6 +6,7 @@ class Entity
     public int Hp { get; protected set; }
     public int MaxHp { get; protected set; }
     public int Attack { get; protected set; }
+    public int Defense { get; protected set; }
     public char Symbol { get; protected set; }
     public void Move(int dx, int dy)
     {
@@ -24,7 +25,8 @@ class Entity
 
     public void TakeDamage(int amount)
     {
-        Hp -= amount;
+        int final = (int)Math.Max(amount - Defense, amount * 0.1);
+        Hp -= final;
         if(Hp <= 0)
         {
             Hp = 0;

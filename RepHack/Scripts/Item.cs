@@ -5,59 +5,43 @@ class Item
     public int Y { get; private set; }
     public string displayName = "";
     public int weight;
-    public char Symbol = '?';
+    public char Symbol;
     public bool PickedUp = false;
-    public bool Consumable = false;
+    public bool Consumable;
     public int Uses = 0;
+    public int effectValue = 0;
+    IItemEffect itemEffect;
 
     public enum ItemType { Potion, Scroll, Food, Ring, Armor, Weapon, Wand, Tool };
-
-    public ItemType type;
-
+    public ItemType category;
     public enum BlessState { Cursed, Normal, Blessed };
-
     public BlessState blessState;
-
+    public Item(ItemData data, IItemEffect effect)
+    {
+        displayName = data.Name;
+        Symbol = data.Symbol[0];
+        if(Enum.TryParse<ItemType>(data.Category, out ItemType type))
+        {
+            this.category = type;
+        }
+        this.itemEffect = effect;
+        this.effectValue = data.EffectValue;
+        this.Uses = data.Uses;
+        this.Consumable = data.Consumable;
+    }
     public void Spawn(int x, int y)
     {
         X = x;
         Y = y;
     }
 
-    public virtual bool Use(Player player) 
+    public bool Use(Player player) 
     {
-        return true;
-    }
-}
-
-class WeaponItem : Item
-{
-    public int damage;
-    public enum WeaponType { Sword, Axe, Spear };
-    public WeaponType weaponType;
-    public WeaponItem()
-    {
-        Symbol = ')';
-    }
-    
-    public override bool Use(Player player) { return true; }
-}
-
-class PotionItem : Item
-{
-    public int healAmount = 5;
-    public PotionItem()
-    {
-        Symbol = '!';
-        displayName = "Potion";
-        Uses = 2;
-        Consumable = true;
-    }
-    public override bool Use(Player player) 
-    {
-        player.Heal(healAmount);
-        Uses -= 1;
-        if(Uses <= 0){ return true; }
-        return false;
+        if(Consumable && Uses > 0)
+        {
+            itemEffect.Apply(player, effectValue);
+            Uses--;
+        }
+        return Uses <= 0;
     }
 }

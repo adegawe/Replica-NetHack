@@ -2,11 +2,13 @@ namespace RepHack;
 class Player : Entity
 {
     public readonly List<Item> inventory = new();
+    public List<ActiveEffect> activeEffects = new();
     public int fovLength = 12;
     public int inventoryMax = 50;
     public Player()
     {
         Attack = 50;
+        Defense = 100;
         MaxHp = 70;
         Symbol = '@';
     }

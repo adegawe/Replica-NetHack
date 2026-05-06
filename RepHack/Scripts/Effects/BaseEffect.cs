@@ -1,8 +1,7 @@
 namespace RepHack;
-class HealEffect : IItemEffect
+class BaseEffect : IItemEffect
 {
     public void Apply(Player player, int value)
     {
-        player.Heal(value);
     }
 }

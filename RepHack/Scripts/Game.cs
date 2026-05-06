@@ -16,7 +16,9 @@ class Game
     public bool gameOver = false;
     int floor = 1;
     int minMonster = 3;
+    int minItem = 3;
     List<EnemyData> enemyData = EnemyLoader.Load();
+    List<ItemData> itemData = ItemLoader.Load();
 
     public Game()
     {
@@ -49,20 +51,17 @@ class Game
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
         var activeEnemy = enemyData.Where(data => data.MinFloor <= floor).ToList();
         enemyRegistry.Clear();
-        var enemies = GetRandomEnemies(minMonster + floor, activeEnemy);
-        SpawnEnemies(enemies, activeRooms);
+        var pickedEnemyData = PickWeighted(minMonster + floor, activeEnemy, d => d.Weight);
+        var enemies = pickedEnemyData.Select(EnemyFactory.Create).ToList();
+        SpawnEntities(enemies, activeRooms, (enemy, x, y) => enemy.Spawn(x, y));
         foreach (Enemy enemy in enemies){
             enemyRegistry.Add(enemy);
         }
-        for(int i = 0; i < 10; i++)
-        {
-            Item potion = new PotionItem();
-            int randomRoom = random.Next(0, activeRooms.Count);
-            int x = random.Next(activeRooms[randomRoom].RoomX, activeRooms[randomRoom].RoomX + activeRooms[randomRoom].RoomWidth);
-            int y = random.Next(activeRooms[randomRoom].RoomY, activeRooms[randomRoom].RoomY + activeRooms[randomRoom].RoomLength);
-            potion.Spawn(x, y);
-            itemList.Add(potion);
-        }
+        var activeItem = itemData.Where(data => data.MinFloor <= floor).ToList();
+        var pickedItemData = PickWeighted(minItem + floor, activeItem, d => d.Weight);
+        var items = pickedItemData.Select(ItemFactory.Create).ToList();
+        SpawnEntities(items, activeRooms, (item, x, y) => item.Spawn(x, y));
+        itemList.AddRange(items);
     }
     public void Update()
     {
@@ -164,33 +163,33 @@ class Game
             enemy.Act(ctx);
         }
     }
-    private List<Enemy> GetRandomEnemies(int requiredNum, List<EnemyData> candidates)
+    private List<T> PickWeighted<T>(int requiredNum, List<T> candidates, Func<T, int> weightSelector)
     {
         int totalWeight = 0;
-        List<Enemy> enemies = new();
-        foreach(EnemyData enemyData in candidates)
+        List<T> entities = new();
+        foreach(T entityData in candidates)
         {
-            totalWeight += enemyData.Weight;
+            totalWeight += weightSelector(entityData);
         }
         for(int i = 0; i < requiredNum; i++)
         {
             int cumulative = 0;
             int pick = random.Next(0, totalWeight);
-            foreach (EnemyData enemyData in candidates)
+            foreach (T entityData in candidates)
             {
-                cumulative += enemyData.Weight;
+                cumulative += weightSelector(entityData);
                 if(cumulative > pick)
                 {
-                    Enemy enemy = EnemyFactory.Create(enemyData); //밖에 빼둘까 했는데 가독성으로 이게 더 좋아서 유지
-                    enemies.Add(enemy);
+                    entities.Add(entityData);
                     break;
                 }
             }
         }
-        return enemies;
+        return entities;
     }
 
-    private void SpawnEnemies(List<Enemy> enemiesToSpawn, List<Node> roomList)
+    private void SpawnEntities<T>(List<T> enemiesToSpawn, List<Node> roomList, 
+                                Action<T, int, int> spawnAction)
     {
         List<(int x, int y)> activeCells = new();
         foreach(Node node in roomList)
@@ -203,11 +202,11 @@ class Game
                 }
             }
         }
-        foreach(Enemy enemy in enemiesToSpawn)
+        foreach(T entity in enemiesToSpawn)
         {
             if(activeCells.Count <= 0) { break; }
             var randomPos = activeCells[random.Next(0, activeCells.Count)];
-            enemy.Spawn(randomPos.x, randomPos.y);
+            spawnAction(entity, randomPos.x, randomPos.y);
             activeCells.Remove(randomPos);
         }
     }
