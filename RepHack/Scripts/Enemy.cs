@@ -14,7 +14,7 @@ class Enemy : Entity
         Symbol = data.Symbol[0];
         this.behavior = behavior;
     }
-    public event Action<Enemy, int, int> Moved;
+    public event Action<Enemy, int, int>? Moved;
     protected override void OnMoved(int oldX, int oldY)
     {
         Moved?.Invoke(this, oldX, oldY);

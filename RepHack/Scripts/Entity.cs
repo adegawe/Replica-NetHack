@@ -25,7 +25,7 @@ class Entity
 
     public void TakeDamage(int amount)
     {
-        int final = (int)Math.Max(amount - Defense, amount * 0.1);
+        int final = (int)Math.Max(amount - Defense, 1);
         Hp -= final;
         if(Hp <= 0)
         {
