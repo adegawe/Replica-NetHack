@@ -16,7 +16,7 @@ class RandomChaseBehavior : IEnemyBehavior
             pos = (dx[index] + self.X, dy[index] + self.Y);
             if(pos.x == ctx.player.X && pos.y == ctx.player.Y)
             {
-                ctx.player.TakeDamage(self.Attack);
+                ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
             }
             else if(ctx.IsOccupied(pos.x, pos.y) == null &&
                     !ctx.distanceMap[pos.y, pos.x].isBlocked)

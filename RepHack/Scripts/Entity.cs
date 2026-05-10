@@ -4,15 +4,12 @@ class Entity
     public int X { get; private set; }
     public int Y { get; private set; }
     public int Hp { get; protected set; }
-    public int MaxHp { get; protected set; }
-    public int Attack { get; protected set; }
-    public int Defense { get; protected set; }
     public char Symbol { get; protected set; }
+    public Dictionary<StatType, Stat> stats { get; } = new();
     public void Move(int dx, int dy)
     {
         int oldX = X, oldY = Y;
-        X += dx;
-        Y += dy;
+        X += dx; Y += dy;
         OnMoved(oldX, oldY);
     }
     protected virtual void OnMoved(int oldX, int oldY){}
@@ -20,12 +17,12 @@ class Entity
     {
         X = x;
         Y = y;
-        Hp = MaxHp;
+        Hp = stats[StatType.MaxHp].Value;
     }
 
     public void TakeDamage(int amount)
     {
-        int final = (int)Math.Max(amount - Defense, 1);
+        int final = (int)Math.Max(amount - stats[StatType.Defense].Value, 1);
         Hp -= final;
         if(Hp <= 0)
         {
@@ -37,9 +34,9 @@ class Entity
     public void Heal(int amount)
     {
         Hp += amount;
-        if(Hp > MaxHp)
+        if(Hp > stats[StatType.MaxHp].Value)
         {
-            Hp = MaxHp;
+            Hp = stats[StatType.MaxHp].Value;
         }
     }
 }

@@ -9,7 +9,7 @@ class ChaseCloseBuffBehavior : IEnemyBehavior
         if(pos.x == ctx.player.X && pos.y == ctx.player.Y)
         {
             int bonusDamage = Math.Max(0, MaxAddDamage- ctx.distanceMap[self.Y, self.X].distance/MaxAddDamage);
-            ctx.player.TakeDamage(self.Attack + bonusDamage);
+            ctx.player.TakeDamage(self.stats[StatType.Attack].Value + bonusDamage);
         }
         else
         {

@@ -1,12 +1,11 @@
 namespace RepHack;
-class DefenseUpEffect : ActiveEffect, IItemEffect
+class DefenseUpEffect : ActiveEffect
 {
-    public void Apply(Player player, int value)
+    public override void Apply(Player player, int value)
     {
-        
-    }
-    public override void OnApply(Player player)
-    {
-        
+        if(player.activeEffects.Contains(this)){ return; }
+        var statModifier = new StatModifier(5, StatModType.Flat, this);
+        player.stats[StatType.Defense].AddModifier(statModifier);
+        player.AddEffect(this);
     }
 }

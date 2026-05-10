@@ -8,9 +8,10 @@ class Enemy : Entity
     }
     public Enemy(EnemyData data, IEnemyBehavior behavior)
     {
-        MaxHp = data.Hp;
+        stats[StatType.MaxHp] = new() { BaseValue = data.Hp };
         Hp = data.Hp;
-        Attack = data.Attack;
+        stats[StatType.Attack] = new() { BaseValue = data.Attack };
+        stats[StatType.Defense] = new() { BaseValue = 0 };
         Symbol = data.Symbol[0];
         this.behavior = behavior;
     }

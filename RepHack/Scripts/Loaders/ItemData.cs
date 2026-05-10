@@ -10,5 +10,6 @@ class ItemData
     public int MinFloor { get; set; } = 1;
     public int Weight { get; set; } = 1;
     public int Uses { get; set; } = 1;
+    public int RemainingTime { get; set; }
     public bool Consumable { get; set; } = false;
 }

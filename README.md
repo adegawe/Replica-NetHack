@@ -1,4 +1,6 @@
-![gameicon](./screenshots/gameicon.png)
+<p>
+  <img src="./screenshots/gameicon.png" width="180" length="180" />
+</p>
 
 # RepHack
 
@@ -6,7 +8,9 @@ C# 콘솔 기반 ASCII 로그라이크. NetHack에서 영감을 받아 제작.
 원래 NetHack을 만들면서 게임개발에 주로 쓰이는 알고리즘 학습용으로 개발했으나, 갈수록 독자적인 판단으로 만드는 경우가 늘어나 목표가 완성으로 바뀌게 되었음.
 대부분은 오버엔지니어링을 자제하였으나, json 방식과 같은 게임개발에 많이 쓰이는 방식의 경우에는 학습을 위해 쓰는 경우가 있음.
 
-![gameplay](./screenshots/gameplay.png)
+<a>
+  <img src="./screenshots/rephack.gif" width="400" />
+</a>
 
 ## 핵심 시스템
 
@@ -112,18 +116,61 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 
 ### 클래스 구조
 
+**핵심 시스템**
+
 | 클래스 | 역할 |
 |--------|------|
 | `Game` | 게임 루프, 시스템 간 조율 |
-| `Entity` | 플레이어/적 공통 베이스. 좌표, HP, 이동, 피격 |
+| `TurnContext` | 한 턴의 공유 상태(player, distanceMap, isOccupied)를 행동에 주입 |
+| `Control` | 입력 처리, 키 바인딩 (`Dictionary<Key, Action>`) |
+| `Renderer` | 버퍼 기반 렌더링, 시야/탐색 영역 색상 분리, 배치 출력 |
+
+**엔티티**
+
+| 클래스 | 역할 |
+|--------|------|
+| `Entity` | Player/Enemy 공통 베이스. 좌표·HP·이동·피격·사망 후크 |
 | `Player` | 플레이어 상태, 인벤토리 |
-| `Enemy` | 적 인스턴스. 스탯과 IEnemyBehavior를 가지며 Act 호출 시 행동 위임 |
-| `Item` | 아이템 베이스 클래스. `PotionItem`, `WeaponItem` 등이 상속 |
-| `Dungeon` | BSP 기반 맵 생성, 방/복도 배치 |
-| `FieldOfView` | Recursive Shadowcasting, 탐색 기록 관리 |
-| `Renderer` | 버퍼 기반 렌더링, 색상 적용, UI 출력 |
-| `Control` | 입력 처리, 키 바인딩 |
-| `Pathfinding` | BFS 경로 탐색, 다익스트라. 배열, 큐 재사용으로 GC 부담 최소화 |
+| `Enemy` | 적 인스턴스. `IEnemyBehavior` 위임으로 Act 처리 |
+| `Item` | 아이템. `IItemEffect` 위임으로 Use 처리 |
+| `EnemyRegistry` | 위치 `Dictionary` 관리. `Enemy.Moved` 이벤트 구독으로 O(1) 조회 |
+
+**맵 · 시야 · 길찾기**
+
+| 클래스 | 역할 |
+|--------|------|
+| `Dungeon` | BSP 기반 절차적 맵 생성, 형제 노드 재귀 복도 연결 |
+| `FOV` | Recursive Shadowcasting, `isVisible`/`isExplored` 분리 |
+| `Pathfinding` | Dijkstra Map (전체 적이 공유). 배열·PriorityQueue 재사용으로 GC 최소화 |
+
+**적 행동 전략** (`Scripts/Behaviors/`, Strategy 패턴)
+
+| 클래스 | 역할 |
+|--------|------|
+| `IEnemyBehavior` | 적 행동 인터페이스 |
+| `IRangedEnemy` | 원거리 능력 확장. 위험 라인(`AttackLine`) 노출 |
+| `ChaseBehavior` | 다익스트라 맵 따라 1칸 추격 |
+| `RandomChaseBehavior` | 약 50% 추격 / 50% 랜덤 이동 |
+| `ChaseCloseBuffBehavior` | 거리 가까울수록 데미지 증가 |
+| `DrainOnHitChaseBehavior` | 명중 시 자가 회복 |
+| `WarnRangedBehavior` | 시야 진입 1턴 경고 → 다음 턴 사격 |
+| `InstantRangedBehavior` | 시야 진입 시 25% 확률 즉시 사격 |
+
+**아이템 효과** (`Scripts/Effects/`, Strategy 패턴)
+
+| 클래스 | 역할 |
+|--------|------|
+| `IItemEffect` | 아이템 효과 인터페이스 |
+| `HealEffect` | HP 회복 |
+| `BaseEffect` | 효과 없는 기본 (예: Water) |
+
+**데이터 드리븐 인프라** (`Scripts/Loaders/`, `Data/*.json`)
+
+| 클래스 | 역할 |
+|--------|------|
+| `EnemyData` / `ItemData` | JSON 직렬화용 POCO |
+| `EnemyLoader` / `ItemLoader` | startup 시 JSON → 데이터 리스트 deserialize |
+| `EnemyFactory` / `ItemFactory` | 데이터 + 행동/효과 키 매핑으로 인스턴스 생성, 미등록 키 폴백 |
 
 ## 구현 완료
 

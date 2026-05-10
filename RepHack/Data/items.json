@@ -4,6 +4,7 @@
         "symbol": "!",
         "color": "Blue",
         "category": "potion",
+        "weight": 5,
         "effectType": "water",
         "effectValue": 0,
         "uses": 1,
@@ -14,6 +15,7 @@
         "symbol": "!",
         "color": "Red",
         "category": "potion",
+        "weight": 5,
         "effectType": "heal",
         "effectValue": 20,
         "uses": 2,
@@ -24,8 +26,46 @@
         "symbol": "!",
         "color": "Blue",
         "category": "potion",
+        "weight": 5,
         "effectType": "dizzy",
         "effectValue": 20,
-        "consumable": true
+        "consumable": true,
+        "remainingTime": 20
+    },
+    {
+        "name": "Attack Bonus Potion",
+        "symbol": "!",
+        "color": "Red",
+        "category": "potion",
+        "weight": 1,
+        "effectType": "attackBonus",
+        "effectValue": 5,
+        "uses": 1,
+        "consumable": true,
+        "remainingTime": 7
+    },
+    {
+        "name": "Defense Bonus Potion",
+        "symbol": "!",
+        "color": "Blue",
+        "category": "potion",
+        "weight": 1,
+        "effectType": "defenseBonus",
+        "effectValue": 5,
+        "uses": 1,
+        "consumable": true,
+        "remainingTime": 7
+    },
+    {
+        "name": "Poison Potion",
+        "symbol": "!",
+        "color": "Purple",
+        "category": "potion",
+        "weight": 1,
+        "effectType": "poison",
+        "effectValue": 5,
+        "uses": 1,
+        "consumable": true,
+        "remainingTime": 5
     }
 ]

@@ -78,6 +78,7 @@ class Game
         {
             return;
         }
+        player.TickEffect();
         ctx.ReCompute();
         itemList.RemoveAll(i => i.PickedUp == true);
         if(dungeon.map[player.Y, player.X] == '>')
@@ -108,7 +109,7 @@ class Game
             Enemy? tempEnemy = enemyRegistry.IsOccupied(player.X + dx, player.Y + dy);
             if(tempEnemy != null)
             {
-                tempEnemy.TakeDamage(player.Attack);
+                tempEnemy.TakeDamage(player.stats[StatType.Attack].Value);
                 if(tempEnemy.Hp <= 0)
                 {
                     enemyRegistry.Remove(tempEnemy);

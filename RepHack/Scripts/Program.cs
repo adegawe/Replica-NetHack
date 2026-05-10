@@ -16,7 +16,6 @@ class Program
             if(game.gameOver == true)
             {
                 game.GameOver();
-                Thread.Sleep(200);
                 return;
             }
             game.Render();

@@ -25,6 +25,7 @@ class Item
             this.category = type;
         }
         this.itemEffect = effect;
+        if (effect is ActiveEffect ae) ae.SetTurns(data.RemainingTime);
         this.effectValue = data.EffectValue;
         this.Uses = data.Uses;
         this.Consumable = data.Consumable;

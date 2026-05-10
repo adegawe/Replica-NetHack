@@ -1,12 +1,11 @@
 namespace RepHack;
-class DizzyEffect : ActiveEffect, IItemEffect
+class DizzyEffect : ActiveEffect
 {
-    public void Apply(Player player, int value)
+    public override void Apply(Player player, int value)
     {
-        
-    }
-    public override void OnApply(Player player)
-    {
-        
+        if(player.activeEffects.Contains(this)){ return; }
+        var statModifier = new StatModifier(-5, StatModType.Flat, this);
+        player.stats[StatType.FovLength].AddModifier(statModifier);
+        player.AddEffect(this);
     }
 }

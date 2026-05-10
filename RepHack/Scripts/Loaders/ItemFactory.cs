@@ -9,6 +9,10 @@ static class ItemFactory
         {
             {"water", () => new BaseEffect()},
             {"heal", () => new HealEffect()},
+            {"attackBonus", () => new AttackUpEffect()},
+            {"defenseBonus", () => new DefenseUpEffect()},
+            {"dizzy", () => new DizzyEffect()},
+            {"poison", () => new PoisonEffect()},
         };
     }
 

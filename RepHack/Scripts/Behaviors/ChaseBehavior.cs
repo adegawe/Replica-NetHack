@@ -7,7 +7,7 @@ class ChaseBehavior : IEnemyBehavior
             
         if(pos.x == ctx.player.X && pos.y == ctx.player.Y)
         {
-            ctx.player.TakeDamage(self.Attack);
+            ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
         }
         else
         {

@@ -14,7 +14,7 @@ class InstantRangedBehavior : IRangedEnemy
         int accurate = random.Next(0, 4);
         if(isPlayer && accurate == 0)
         {
-            ctx.player.TakeDamage(self.Attack);
+            ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
         }
         else
         {

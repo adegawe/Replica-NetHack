@@ -17,7 +17,7 @@ class WarnRangedBehavior : IRangedEnemy
         }
         else if(isPlayer && enemyStatus == Status.Warning)
         {
-            ctx.player.TakeDamage(self.Attack);
+            ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
         }
         else
         {
