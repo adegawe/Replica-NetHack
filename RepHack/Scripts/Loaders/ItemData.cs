@@ -12,4 +12,5 @@ class ItemData
     public int Uses { get; set; } = 1;
     public int RemainingTime { get; set; }
     public bool Consumable { get; set; } = false;
+    public Dictionary<StatType, int> EquipBonuses { get; set; } = new();
 }

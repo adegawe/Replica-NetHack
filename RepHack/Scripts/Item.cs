@@ -10,6 +10,7 @@ class Item
     public bool Consumable;
     public int Uses = 0;
     public int effectValue = 0;
+    public Dictionary<StatType, int> equipBonuses = new();
     IItemEffect itemEffect;
 
     public enum ItemType { Potion, Scroll, Food, Ring, Armor, Weapon, Wand, Tool };
@@ -23,6 +24,10 @@ class Item
         if(Enum.TryParse<ItemType>(data.Category, out ItemType type))
         {
             this.category = type;
+        }
+        if(this.category == ItemType.Weapon || this.category == ItemType.Armor)
+        {
+            this.equipBonuses = data.EquipBonuses;
         }
         this.itemEffect = effect;
         if (effect is ActiveEffect ae) ae.SetTurns(data.RemainingTime);

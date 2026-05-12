@@ -3,6 +3,8 @@ class Player : Entity
 {
     public readonly List<Item> inventory = new();
     public List<ActiveEffect> activeEffects = new();
+    public Item? equippedWeapon;
+    public Item? equippedArmor;
     public Player()
     {
         stats[StatType.Attack] = new Stat { BaseValue = 50 };
@@ -41,5 +43,38 @@ class Player : Entity
                 stat.RemoveAllFromSource(effect);
         
         activeEffects.RemoveAll(e => e.IsExpired());
+    }
+    public void Equip(Item item)
+    {
+        if(item.category == Item.ItemType.Weapon)
+        {
+            this.equippedWeapon = item;
+        }
+        if(item.category == Item.ItemType.Armor)
+        {
+            this.equippedArmor = item;
+        }
+        foreach(var (statType, value) in item.equipBonuses)
+        {
+            var mod = new StatModifier(value, StatModType.Flat, item);
+            stats[statType].AddModifier(mod);
+        }
+        Console.WriteLine($"{item.category}의 {item.displayName}을 착용했다.");
+        
+    }
+    public void UnEquip(Item item)
+    {
+        if(item.category == Item.ItemType.Weapon)
+        {
+            this.equippedWeapon = null;
+        }
+        if(item.category == Item.ItemType.Armor)
+        {
+            this.equippedArmor = null;
+        }
+        foreach(var (statType, value) in item.equipBonuses)
+        {
+            stats[statType].RemoveAllFromSource(item);
+        }
     }
 }

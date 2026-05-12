@@ -122,10 +122,35 @@ class Game
 
     private void ProcessPickUp(int x, int y)
     {
-        foreach (Item item in itemList){
+        foreach (Item item in itemList.ToList()){
             if(item.X == x && item.Y == y)
             {
-                player.PickUp(item);
+                if(item.category == Item.ItemType.Weapon)
+                {
+                    if(player.equippedWeapon != null)
+                    {
+                        itemList.Add(player.equippedWeapon);
+                        player.equippedWeapon.Spawn(x, y);
+                        player.equippedWeapon.PickedUp = false;
+                        player.UnEquip(player.equippedWeapon);
+                    }
+                    player.Equip(item);
+                }
+                else if(item.category == Item.ItemType.Armor)
+                {
+                    if(player.equippedArmor != null)
+                    {
+                        itemList.Add(player.equippedArmor);
+                        player.equippedArmor.Spawn(x, y);
+                        player.equippedArmor.PickedUp = false;
+                        player.UnEquip(player.equippedArmor);
+                    }
+                    player.Equip(item);
+                }
+                else
+                {
+                    player.PickUp(item);
+                }
                 item.PickedUp = true;
             }
         }
@@ -226,7 +251,8 @@ class TurnContext
         pathfinding = path;
         IsOccupied = i;
         isEnemyAtCached = (x, y) => IsOccupied(x, y) != null;
-        ReCompute();
+        distanceMap = pathfinding.Dijkstra(player.X, player.Y, 
+         isEnemyAtCached);
     }
     
     public void ReCompute()

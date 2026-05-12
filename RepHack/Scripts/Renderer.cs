@@ -25,10 +25,11 @@ class Renderer
         {
             {'@', ConsoleColor.Blue},
             {'!', ConsoleColor.DarkMagenta},
+            {'?', ConsoleColor.Green},
             {'>', ConsoleColor.Yellow},
             {'#', ConsoleColor.White},
-            {'.', ConsoleColor.Black}, //이거 아예 안 보이는거 아님; 자꾸 질문 들어오는데, Explored에 Black으로 한 것도 의도임. 다른 컴퓨터에서 실험은 안 해봤지만, 코드스페이스 내 환경에서는 Black으로 했어도 스크린 샷에서 볼 수 있듯이 잘만 보임. 오히려 어두운 회색정도의 색인데 왜 Black인지도 모르겠음.
-            {'░', ConsoleColor.Black}
+            {'.', ConsoleColor.DarkGray},
+            {'░', ConsoleColor.DarkGray}
         };
     }
 
@@ -98,7 +99,7 @@ class Renderer
                     }
                     else{ colorMap.TryGetValue(text, out color); }
                 }
-                else{color = ConsoleColor.Black;}
+                else{color = ConsoleColor.DarkGray;}
                 if(lastCs == color)
                 {
                     sb.Append(text);
@@ -121,7 +122,7 @@ class Renderer
     public void DrawUI(int floor)
     {
         Console.WriteLine("\n════════════════════════════════════════");
-        Console.WriteLine($"HP: {player.Hp}/{player.stats[StatType.MaxHp].Value}  ATK: {player.stats[StatType.Attack].Value}  Floor: {floor}");
+        Console.WriteLine($"HP: {player.Hp}/{player.stats[StatType.MaxHp].Value}  ATK: {player.stats[StatType.Attack].Value}  DEF: {player.stats[StatType.Defense].Value}  Floor: {floor}");
         Console.WriteLine("════════════════════════════════════════");
     }
 

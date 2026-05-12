@@ -35,8 +35,8 @@ class FOV
 
         for(int i = 0; i <= distance; i++)
         {
-            float leftSlope = (i-0.5f) / distance;
-            float rightSlope = (i+0.5f) / distance;
+            float leftSlope = (i-0.8f) / distance;
+            float rightSlope = (i+0.8f) / distance;
             bool isWall = false;
             if(leftSlope > endSlope || rightSlope < startSlope){ continue; }
             else

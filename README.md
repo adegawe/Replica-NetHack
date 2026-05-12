@@ -130,7 +130,7 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 | 클래스 | 역할 |
 |--------|------|
 | `Entity` | Player/Enemy 공통 베이스. 좌표·HP·이동·피격·사망 후크 |
-| `Player` | 플레이어 상태, 인벤토리 |
+| `Player` | 플레이어 상태, 인벤토리, 장비 |
 | `Enemy` | 적 인스턴스. `IEnemyBehavior` 위임으로 Act 처리 |
 | `Item` | 아이템. `IItemEffect` 위임으로 Use 처리 |
 | `EnemyRegistry` | 위치 `Dictionary` 관리. `Enemy.Moved` 이벤트 구독으로 O(1) 조회 |
@@ -185,11 +185,13 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 - 게임오버 처리
 - Dijkstra Map
 - 적 행동 다양화
+- 포션 효과 다양화
+- 장비 시스템 — 무기/방어구 장착, 스탯 반영
 
 ## 향후 계획
 
-- **장비 시스템** — 무기/방어구 장착, 스탯 반영
-- **스크롤/포션 효과 다양화** — 미확인 아이템 식별 스템 (NetHack의 핵심 시스템)
+- **스크롤**
+- **미확인 아이템 식별 시스템** ㅡ (NetHack의 핵심 시스템)
 
 ## 조작
 
