@@ -8,7 +8,7 @@ class Player : Entity
     public Player()
     {
         stats[StatType.Attack] = new Stat { BaseValue = 50 };
-        stats[StatType.Defense] = new Stat { BaseValue = 1 };
+        stats[StatType.Defense] = new Stat { BaseValue = 140 };
         stats[StatType.MaxHp] = new Stat { BaseValue = 70 };
         Hp = 70;
         stats[StatType.FovLength] = new Stat { BaseValue = 12 };

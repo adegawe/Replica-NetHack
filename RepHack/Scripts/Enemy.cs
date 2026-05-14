@@ -1,6 +1,7 @@
 namespace RepHack;
 class Enemy : Entity
 {
+    bool isBoss;
     IEnemyBehavior behavior;
     public IRangedEnemy? GetRangedBehavior()
     {
@@ -13,6 +14,7 @@ class Enemy : Entity
         stats[StatType.Attack] = new() { BaseValue = data.Attack };
         stats[StatType.Defense] = new() { BaseValue = 0 };
         Symbol = data.Symbol[0];
+        this.isBoss = data.IsBoss;
         this.behavior = behavior;
     }
     public event Action<Enemy, int, int>? Moved;

@@ -141,6 +141,13 @@ class Renderer
         Console.WriteLine("════════════════════════════════════════════════════════════════════════════════");
     }
 
+    public void DrawAct(string message)
+    {
+        Console.WriteLine("\n════════════════════════════════════════");
+        Console.WriteLine($"{message}");
+        Console.WriteLine("════════════════════════════════════════");
+    }
+
     public void GameOver(int floor)
     {
         Console.Clear();

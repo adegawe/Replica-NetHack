@@ -8,7 +8,7 @@ class DrainOnHitChaseBehavior : IEnemyBehavior
         if(pos.x == ctx.player.X && pos.y == ctx.player.Y)
         {
             ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
-            self.Heal(self.stats[StatType.Attack].Value);
+            self.Heal(self.stats[StatType.Attack].Value-ctx.player.stats[StatType.Defense].Value);
         }
         else
         {

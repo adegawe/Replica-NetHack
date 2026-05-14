@@ -4,7 +4,7 @@
         "symbol": "!",
         "color": "Blue",
         "category": "Potion",
-        "weight": 5,
+        "weight": 15,
         "effectType": "water",
         "effectValue": 0,
         "uses": 1,
@@ -15,16 +15,16 @@
         "symbol": "!",
         "color": "Red",
         "category": "Potion",
-        "weight": 5,
+        "weight": 10,
         "effectType": "heal",
-        "effectValue": 20,
+        "effectValue": 25,
         "uses": 2,
         "consumable": true
     },
     {
         "name": "Dizzy Potion",
         "symbol": "!",
-        "color": "Blue",
+        "color": "DarkCyan",
         "category": "Potion",
         "weight": 5,
         "effectType": "dizzy",
@@ -35,33 +35,33 @@
     {
         "name": "Attack Bonus Potion",
         "symbol": "!",
-        "color": "Red",
+        "color": "DarkRed",
         "category": "Potion",
-        "weight": 1,
+        "weight": 4,
         "effectType": "attackBonus",
         "effectValue": 5,
         "uses": 1,
         "consumable": true,
-        "remainingTime": 7
+        "remainingTime": 10
     },
     {
         "name": "Defense Bonus Potion",
         "symbol": "!",
-        "color": "Blue",
+        "color": "DarkBlue",
         "category": "Potion",
-        "weight": 1,
+        "weight": 4,
         "effectType": "defenseBonus",
         "effectValue": 5,
         "uses": 1,
         "consumable": true,
-        "remainingTime": 7
+        "remainingTime": 10
     },
     {
         "name": "Poison Potion",
         "symbol": "!",
-        "color": "Purple",
+        "color": "DarkMagenta",
         "category": "Potion",
-        "weight": 1,
+        "weight": 3,
         "effectType": "poison",
         "effectValue": 5,
         "uses": 1,
@@ -69,39 +69,281 @@
         "remainingTime": 5
     },
     {
-        "name": "Basic Sword",
-        "symbol": "?",
-        "color": "Purple",
+        "name": "Rusty Dagger",
+        "symbol": ")",
+        "color": "Gray",
+        "category": "Weapon",
+        "weight": 12,
+        "equipBonuses": {
+            "Attack": 3
+        },
+        "minFloor": 1
+    },
+    {
+        "name": "Wooden Club",
+        "symbol": ")",
+        "color": "DarkYellow",
+        "category": "Weapon",
+        "weight": 8,
+        "equipBonuses": {
+            "Attack": 6
+        },
+        "minFloor": 2
+    },
+    {
+        "name": "Short Sword",
+        "symbol": ")",
+        "color": "White",
+        "category": "Weapon",
+        "weight": 6,
+        "equipBonuses": {
+            "Attack": 9
+        },
+        "minFloor": 4
+    },
+    {
+        "name": "Scout's Blade",
+        "symbol": ")",
+        "color": "Green",
+        "category": "Weapon",
+        "weight": 5,
+        "equipBonuses": {
+            "Attack": 12,
+            "FovLength": 1
+        },
+        "minFloor": 6
+    },
+    {
+        "name": "Heavy Mace",
+        "symbol": ")",
+        "color": "DarkGray",
+        "category": "Weapon",
+        "weight": 4,
+        "equipBonuses": {
+            "Attack": 18
+        },
+        "minFloor": 8
+    },
+    {
+        "name": "Steel Broadsword",
+        "symbol": ")",
+        "color": "Cyan",
+        "category": "Weapon",
+        "weight": 4,
+        "equipBonuses": {
+            "Attack": 25
+        },
+        "minFloor": 10
+    },
+    {
+        "name": "Assassin's Dirk",
+        "symbol": ")",
+        "color": "DarkBlue",
         "category": "Weapon",
         "weight": 3,
-        "equipBonuses": { "Attack" : 5 },
-        "minFloor" : 4
+        "equipBonuses": {
+            "Attack": 32
+        },
+        "minFloor": 12
     },
     {
-        "name": "Sharp Sword",
-        "symbol": "?",
-        "color": "Purple",
+        "name": "Vampiric Edge",
+        "symbol": ")",
+        "color": "DarkRed",
+        "category": "Weapon",
+        "weight": 2,
+        "equipBonuses": {
+            "Attack": 38,
+            "MaxHp": 15
+        },
+        "minFloor": 15
+    },
+    {
+        "name": "Sniper's Spear",
+        "symbol": ")",
+        "color": "Yellow",
+        "category": "Weapon",
+        "weight": 2,
+        "equipBonuses": {
+            "Attack": 45,
+            "FovLength": 2
+        },
+        "minFloor": 18
+    },
+    {
+        "name": "Dragon Slayer",
+        "symbol": ")",
+        "color": "Red",
         "category": "Weapon",
         "weight": 1,
-        "equipBonuses": { "Attack" : 10 },
-        "minFloor" : 9
+        "equipBonuses": {
+            "Attack": 60
+        },
+        "minFloor": 22
     },
     {
-        "name": "Basic Armor",
-        "symbol": "?",
-        "color": "Purple",
+        "name": "Void Saber",
+        "symbol": ")",
+        "color": "DarkMagenta",
+        "category": "Weapon",
+        "weight": 1,
+        "equipBonuses": {
+            "Attack": 75,
+            "FovLength": -1
+        },
+        "minFloor": 25
+    },
+    {
+        "name": "RepHack Masterblade",
+        "symbol": ")",
+        "color": "Magenta",
+        "category": "Weapon",
+        "weight": 1,
+        "equipBonuses": {
+            "Attack": 100,
+            "MaxHp": 30,
+            "FovLength": 1
+        },
+        "minFloor": 30
+    },
+    {
+        "name": "Cloth Tunic",
+        "symbol": "[",
+        "color": "White",
+        "category": "Armor",
+        "weight": 12,
+        "equipBonuses": {
+            "Defense": 2
+        },
+        "minFloor": 1
+    },
+    {
+        "name": "Leather Vest",
+        "symbol": "[",
+        "color": "DarkYellow",
+        "category": "Armor",
+        "weight": 8,
+        "equipBonuses": {
+            "Defense": 6
+        },
+        "minFloor": 3
+    },
+    {
+        "name": "Padded Jacket",
+        "symbol": "[",
+        "color": "Gray",
+        "category": "Armor",
+        "weight": 7,
+        "equipBonuses": {
+            "Defense": 5,
+            "MaxHp": 10
+        },
+        "minFloor": 4
+    },
+    {
+        "name": "Backpack Vest",
+        "symbol": "[",
+        "color": "Green",
+        "category": "Armor",
+        "weight": 5,
+        "equipBonuses": {
+            "Defense": 4,
+            "InventoryMax": 5
+        },
+        "minFloor": 5
+    },
+    {
+        "name": "Chainmail",
+        "symbol": "[",
+        "color": "Cyan",
+        "category": "Armor",
+        "weight": 5,
+        "equipBonuses": {
+            "Defense": 15
+        },
+        "minFloor": 7
+    },
+    {
+        "name": "Hardened Plate",
+        "symbol": "[",
+        "color": "DarkGray",
+        "category": "Armor",
+        "weight": 4,
+        "equipBonuses": {
+            "Defense": 22
+        },
+        "minFloor": 10
+    },
+    {
+        "name": "Reinforced Hauberk",
+        "symbol": "[",
+        "color": "Blue",
         "category": "Armor",
         "weight": 3,
-        "equipBonuses": { "Defense" : 5 },
-        "minFloor" : 4
+        "equipBonuses": {
+            "Defense": 20,
+            "MaxHp": 25
+        },
+        "minFloor": 13
     },
     {
-        "name": "Solid Armor",
-        "symbol": "?",
-        "color": "Purple",
+        "name": "Guardian Mail",
+        "symbol": "[",
+        "color": "Yellow",
+        "category": "Armor",
+        "weight": 2,
+        "equipBonuses": {
+            "Defense": 35
+        },
+        "minFloor": 17
+    },
+    {
+        "name": "Merchant's Coat",
+        "symbol": "[",
+        "color": "DarkYellow",
+        "category": "Armor",
+        "weight": 2,
+        "equipBonuses": {
+            "Defense": 15,
+            "InventoryMax": 15
+        },
+        "minFloor": 20
+    },
+    {
+        "name": "Crystal Armor",
+        "symbol": "[",
+        "color": "DarkCyan",
         "category": "Armor",
         "weight": 1,
-        "equipBonuses": { "Defense" : 10 },
-        "minFloor" : 9
+        "equipBonuses": {
+            "Defense": 45,
+            "FovLength": 1
+        },
+        "minFloor": 24
+    },
+    {
+        "name": "Dragon Scale Mail",
+        "symbol": "[",
+        "color": "Red",
+        "category": "Armor",
+        "weight": 1,
+        "equipBonuses": {
+            "Defense": 65,
+            "MaxHp": 50
+        },
+        "minFloor": 28
+    },
+    {
+        "name": "Exoskeleton Suit",
+        "symbol": "[",
+        "color": "DarkMagenta",
+        "category": "Armor",
+        "weight": 1,
+        "equipBonuses": {
+            "Defense": 90,
+            "InventoryMax": 10,
+            "Attack": 10
+        },
+        "minFloor": 35
     }
 ]

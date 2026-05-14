@@ -1,8 +1,6 @@
 namespace RepHack;
 class InstantRangedBehavior : IRangedEnemy
 {
-    private enum Status { Idle,  Attack }
-    private Status enemyStatus = Status.Idle;
     private Random random = new();
     public List<(int x, int y)> AttackLine { get; } = new();
     public bool isPlayer { get; private set; }
@@ -11,10 +9,15 @@ class InstantRangedBehavior : IRangedEnemy
         AttackLine.Clear();
         isPlayer = CalcuFov(self, ctx);
         (int x, int y) pos = ctx.pathfinding.GetNextStep(self, ctx.distanceMap, (x ,y) => ctx.IsOccupied(x, y));
-        int accurate = random.Next(0, 4);
-        if(isPlayer && accurate == 0)
+        bool isHit = random.Next(0, 4) == 0;
+        if(isPlayer && isHit)
         {
             ctx.player.TakeDamage(self.stats[StatType.Attack].Value);
+        }
+        else if(pos.x == ctx.player.X && pos.y == ctx.player.Y)
+        {
+            AttackLine.Clear();
+            ctx.player.TakeDamage(self.stats[StatType.Attack].Value/5);
         }
         else
         {
