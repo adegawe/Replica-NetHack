@@ -7,9 +7,9 @@ class Player : Entity
     public Item? equippedArmor;
     public Player()
     {
-        stats[StatType.Attack] = new Stat { BaseValue = 50 };
-        stats[StatType.Defense] = new Stat { BaseValue = 140 };
-        stats[StatType.MaxHp] = new Stat { BaseValue = 70 };
+        stats[StatType.Attack] = new Stat { BaseValue = 10 };
+        stats[StatType.Defense] = new Stat { BaseValue = 1 };
+        stats[StatType.MaxHp] = new Stat { BaseValue = 50 };
         Hp = 70;
         stats[StatType.FovLength] = new Stat { BaseValue = 12 };
         stats[StatType.InventoryMax] = new Stat { BaseValue = 50 };
