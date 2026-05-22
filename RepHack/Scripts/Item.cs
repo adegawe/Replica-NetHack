@@ -10,6 +10,7 @@ class Item
     public bool Consumable;
     public int Uses = 0;
     public int effectValue = 0;
+    static bool IsIdentified = false;
     public Dictionary<StatType, int> equipBonuses = new();
     IItemEffect itemEffect;
 

@@ -59,7 +59,7 @@ class Player : Entity
             var mod = new StatModifier(value, StatModType.Flat, item);
             stats[statType].AddModifier(mod);
         }
-        Console.WriteLine($"{item.category}의 {item.displayName}을 착용했다.");
+        Renderer.AddMessage($"{item.category}의 {item.displayName}을 착용했다.");
         
     }
     public void UnEquip(Item item)

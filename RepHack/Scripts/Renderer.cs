@@ -7,6 +7,7 @@ class Renderer
     FOV fov;
     EnemyRegistry enemyRegistry;
     List<Item> itemList;
+    static Queue<string> messageBuffer = new();
     StringBuilder sb = new();
     HashSet<(int x, int y)> dangerCells = new();
     
@@ -40,6 +41,10 @@ class Renderer
         DrawCall();
         PrintBuffer();
         DrawUI(floor);
+        if(messageBuffer.Count > 0)
+        {
+            DrawAct();
+        }
     }
 
     public void DrawCall()
@@ -140,11 +145,16 @@ class Renderer
         Console.Write("\n");
         Console.WriteLine("════════════════════════════════════════════════════════════════════════════════");
     }
-
-    public void DrawAct(string message)
+    static public void AddMessage(string message)
     {
-        Console.WriteLine("\n════════════════════════════════════════");
-        Console.WriteLine($"{message}");
+        messageBuffer.Enqueue(message);
+    }
+    public void DrawAct()
+    {
+        while (messageBuffer.TryDequeue(out string msg))
+        {
+            Console.WriteLine(msg);
+        }
         Console.WriteLine("════════════════════════════════════════");
     }
 

@@ -188,11 +188,6 @@ if (keyMap.TryGetValue(control.GetInput(), out Action? act))
 - 포션 효과 다양화
 - 장비 시스템 — 무기/방어구 장착, 스탯 반영
 
-## 향후 계획
-
-- **스크롤**
-- **미확인 아이템 식별 시스템** ㅡ (NetHack의 핵심 시스템)
-
 ## 조작
 
 | 키 | 동작 |

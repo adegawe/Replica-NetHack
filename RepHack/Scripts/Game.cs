@@ -14,7 +14,7 @@ class Game
     Renderer renderer;
     TurnContext ctx;
     public bool gameOver = false;
-    int floor = 40;
+    int floor = 1;
     int minMonster = 3;
     int minItem = 3;
     List<EnemyData> enemyData = EnemyLoader.Load();
@@ -51,7 +51,7 @@ class Game
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
         var activeEnemy = enemyData.Where(data => data.MinFloor <= floor).ToList();
         enemyRegistry.Clear();
-        var pickedEnemyData = PickWeighted(minMonster + floor >> 2, activeEnemy, d => d.Weight);
+        var pickedEnemyData = PickWeighted(minMonster + floor >> 1, activeEnemy, d => d.Weight);
         var enemies = pickedEnemyData.Select(EnemyFactory.Create).ToList();
         SpawnEntities(enemies, activeRooms, (enemy, x, y) => enemy.Spawn(x, y));
         if(floor%10 == 0)
