@@ -36,7 +36,7 @@
         "symbol": "z",
         "color": "DarkYellow",
         "behavior": "slow_chase",
-        "minFloor": 2,
+        "minFloor": 1,
         "weight": 150
     },
     {

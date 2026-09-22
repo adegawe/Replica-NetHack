@@ -51,7 +51,7 @@ class Game
         player.Spawn(activeRooms[0].RoomCenterX, activeRooms[0].RoomCenterY);
         var activeEnemy = enemyData.Where(data => data.MinFloor <= floor).ToList();
         enemyRegistry.Clear();
-        var pickedEnemyData = PickWeighted(minMonster + floor >> 1, activeEnemy, d => d.Weight);
+        var pickedEnemyData = PickWeighted(minMonster + (floor >> 1), activeEnemy, d => d.Weight);
         var enemies = pickedEnemyData.Select(EnemyFactory.Create).ToList();
         SpawnEntities(enemies, activeRooms, (enemy, x, y) => enemy.Spawn(x, y));
         if(floor%10 == 0)
@@ -199,6 +199,11 @@ class Game
     }
     private List<T> PickWeighted<T>(int requiredNum, List<T> candidates, Func<T, int> weightSelector)
     {
+        if(candidates.Count <= 0)
+        {
+            List<T> empty = new();
+            return empty;
+        }
         int totalWeight = 0;
         List<T> entities = new();
         foreach(T entityData in candidates)

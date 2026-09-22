@@ -1,7 +1,7 @@
 namespace RepHack;
 class WarnRangedBehavior : IRangedEnemy
 {
-    private enum Status { Idle, Warning, Attack }
+    private enum Status { Idle, Warning }
     private Status enemyStatus = Status.Idle;
     public List<(int x, int y)> AttackLine { get; } = new();
     public bool isPlayer { get; private set; }

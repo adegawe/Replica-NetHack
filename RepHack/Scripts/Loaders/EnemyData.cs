@@ -9,5 +9,6 @@ class EnemyData
     public string Behavior { get; set; } = "chase";
     public int MinFloor { get; set; } = 1;
     public int Weight { get; set; } = 1;
+    public int MovedTurn { get; set; } = 1;
     public bool IsBoss { get; set; } = false;
 }

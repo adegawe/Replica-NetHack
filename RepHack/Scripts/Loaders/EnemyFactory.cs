@@ -1,4 +1,5 @@
 namespace RepHack;
+using System.Diagnostics;
 static class EnemyFactory
 {
     static Dictionary<string, Func<IEnemyBehavior>> behaviors;
@@ -13,6 +14,7 @@ static class EnemyFactory
             {"chase_drain", () => new DrainOnHitChaseBehavior()},
             {"chase_ranged_warn", () => new WarnRangedBehavior()},
             {"chase_ranged_instant", () => new InstantRangedBehavior()},
+            {"slow_chase", () => new SlowChaseBehavior()},
         };
     }
 
@@ -26,6 +28,7 @@ static class EnemyFactory
         else
         {
             enemy = new Enemy(data, behaviors["chase"]());
+            Debug.WriteLine(enemy, data.Behavior);
         }
         return enemy;
     }
